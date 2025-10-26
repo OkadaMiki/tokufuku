@@ -27,6 +27,7 @@ export default function Page() {
                 <button
                     onClick={(e) => {
                         setTodoList([...todoList, inputValue])
+                        // ...はスプレット構文、配列を展開してくれるやつ
                         setInputValue("")
 
                     }}
@@ -44,7 +45,7 @@ export default function Page() {
                             <button
                                 onClick={() => {
                                     setTodoList(todoList.filter((_, indexForDel) => (
-                                        // 条件のやつ
+                                        // 条件にあてはまったやつだけ出してくれる
                                         indexForDel !== index
                                     )))
                                 }}
