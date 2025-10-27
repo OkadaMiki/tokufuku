@@ -1,0 +1,130 @@
+'use client'
+
+import { useMemo, useState } from "react";
+import { db } from "@/lib/firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import CategorySwiper from "@/components/CategorySwiper";
+import { TOKU_TREE } from "@/constants/categories";
+import styles from "./page.module.css";
+
+const POINTS = { toku: 10, good: 6 } as const;
+type TypeKind = keyof typeof POINTS;
+
+function todayISO() {
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    // getMonth → 0始まり
+    // padStart → 2文字にして空いたら0をいれる
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+// コンポーネント本体
+export default function RecordPage() {
+    // フォーム状態
+    const [type, setType] = useState<TypeKind>("toku");
+    const [dateStr, setDateStr] = useState(todayISO());
+    const [category, setCategory] = useState("");   // 大カテゴリ
+    const [sub, setSub] = useState("");             // サブカテゴリ
+    const [memo, setMemo] = useState("");
+    const [content, setContent] = useState<string>("");     // 任意メモ
+    const [saving, setSaving] = useState(false);
+    const [msg, setMsg] = useState("");
+
+    // 将来：type が "good" のときは GOOD_TREE に入れ替える想定
+    const tree = useMemo(() => TOKU_TREE, [type]);
+
+    const canSubmit = !!(type && dateStr && (sub || category));
+
+    const handlePick = (cat: string, sublabel: string) => {
+        setCategory(cat);
+        setSub(sublabel);
+    };
+
+    const handleSubmit = async () => {
+        if (!canSubmit || saving) return;
+        setSaving(true); setMsg("");
+        try {
+            const occurred = new Date(dateStr);
+            await addDoc(collection(db, "records"), {
+                type,
+                category,
+                subcategory: sub || null,
+                content: memo.trim() || null,
+                occurredOn: occurred,
+                points: POINTS[type],
+                createdAt: serverTimestamp(),
+            });
+            setMsg("保存しました"); setMemo(""); setSub("");
+        } catch (e) {
+            console.error(e);
+            setMsg("保存に失敗しました");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <div className={styles.page}>
+            {/* ヘッダ */}
+            <header className={styles.header}>
+                <h1 className={styles.title}>{type === "toku" ? "とくつみ記録" : "いいこと記録"}</h1>
+                <div className={styles.typeSwitch}>
+                    <button
+                        className={`${styles.typeBtn} ${type === "toku" ? styles.typeActive : ""}`}
+                        onClick={() => setType("toku")}
+                    >🌿 徳</button>
+                    <button
+                        className={`${styles.typeBtn} ${type === "good" ? styles.typeActive : ""}`}
+                        onClick={() => setType("good")}
+                    >✨ いいこと</button>
+                </div>
+            </header>
+
+            {/* 日付 */}
+            <section className={styles.panel}>
+                <label className={styles.label}>日付</label>
+                <div className={styles.row}>
+                    <input
+                        type="date"
+                        value={dateStr}
+                        onChange={(e) => setDateStr(e.target.value)}
+                        className={styles.input}
+                    />
+                    <button className={styles.secondaryBtn} onClick={() => setDateStr(todayISO())}>今</button>
+                </div>
+            </section>
+
+            {/* カテゴリ → 横スワイプでサブ選択 */}
+            <section className={styles.panel}>
+                <CategorySwiper data={tree as any} onPick={handlePick} />
+                <p className={styles.hint}>選択：{category || "—"} {sub ? `> ${sub}` : ""}</p>
+            </section>
+
+            {/* 詳細メモ（任意） */}
+            <section className={styles.panel}>
+                <label className={styles.label}>詳細（任意）</label>
+                <textarea
+                    rows={3}
+                    value={memo}
+                    onChange={(e) => setMemo(e.target.value)}
+                    className={styles.textarea}
+                    placeholder="自由入力"
+                />
+            </section>
+
+            {/* アクション */}
+            <section className={styles.actionRow}>
+                <button
+                    className={styles.primaryBtn}
+                    onClick={handleSubmit}
+                    disabled={!canSubmit || saving}
+                >
+                    {saving ? "保存中…" : "記録"}
+                </button>
+                {msg && <span className={styles.msg}>{msg}</span>}
+            </section>
+        </div>
+    );
+
+}
