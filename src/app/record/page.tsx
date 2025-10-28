@@ -1,8 +1,10 @@
 'use client'
 
-import { useMemo, useState } from "react";
-import { db } from "@/lib/firebase";
+import { useMemo, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { db , auth } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import CategorySwiper from "@/components/CategorySwiper";
 import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
 import styles from "./page.module.css";
@@ -31,6 +33,17 @@ export default function RecordPage() {
     const [saving, setSaving] = useState(false);
     const [msg, setMsg] = useState("");
 
+    // 未ログイン時リダイレクト
+    const router = useRouter();
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (u) => {
+            if (!u) {
+                router.push('/login');
+            }
+        });
+        return () => unsubscribe();
+    }, [router]);
+
     // 将来：type が "good" のときは GOOD_TREE に入れ替える想定
     const tree = useMemo(() => (type === "toku" ? TOKU_TREE : GOOD_TREE), [type]);
 
@@ -46,7 +59,14 @@ export default function RecordPage() {
         setSaving(true); setMsg("");
         try {
             const occurred = new Date(dateStr);
-            await addDoc(collection(db, "records"), {
+            const user = auth.currentUser;
+            if (!user) {
+                setMsg("ログイン状態を確認してください");
+                setSaving(false);
+                return;
+            }
+            const userRecordsRef = collection(db, "users", user.uid, "records");
+            await addDoc(userRecordsRef, {
                 type,
                 category,
                 subcategory: sub || null,
