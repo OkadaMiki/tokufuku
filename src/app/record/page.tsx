@@ -34,13 +34,30 @@ export default function RecordPage() {
     const [msg, setMsg] = useState("");
 
     // 未ログイン時リダイレクト
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
     useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const cachedAuth = localStorage.getItem("authUser");
+        if (cachedAuth) {
+            setUser(JSON.parse(cachedAuth));
+            setLoading(false); // ✅ キャッシュ即表示
+        }
+
         const unsubscribe = onAuthStateChanged(auth, (u) => {
             if (!u) {
-                router.push('/login');
+                localStorage.removeItem("authUser");
+                router.push("/login");
+                return;
             }
+            const authData = { uid: u.uid, email: u.email, displayName: u.displayName || null };
+            localStorage.setItem("authUser", JSON.stringify(authData));
+            setUser(authData);
+            setLoading(false);
         });
+
         return () => unsubscribe();
     }, [router]);
 
@@ -59,7 +76,7 @@ export default function RecordPage() {
         setSaving(true); setMsg("");
         try {
             const occurred = new Date(dateStr);
-            const user = auth.currentUser;
+            const currentUser = auth.currentUser || user;
             if (!user) {
                 setMsg("ログイン状態を確認してください");
                 setSaving(false);
