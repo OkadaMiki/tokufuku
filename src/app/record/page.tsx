@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { db } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import CategorySwiper from "@/components/CategorySwiper";
-import { TOKU_TREE } from "@/constants/categories";
+import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
 import styles from "./page.module.css";
 
 const POINTS = { toku: 10, good: 6 } as const;
@@ -32,7 +32,7 @@ export default function RecordPage() {
     const [msg, setMsg] = useState("");
 
     // 将来：type が "good" のときは GOOD_TREE に入れ替える想定
-    const tree = useMemo(() => TOKU_TREE, [type]);
+    const tree = useMemo(() => (type === "toku" ? TOKU_TREE : GOOD_TREE), [type]);
 
     const canSubmit = !!(type && dateStr && (sub || category));
 
