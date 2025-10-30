@@ -1,13 +1,16 @@
 'use client'
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState} from "react";
 import { useRouter } from "next/navigation";
 import { db , auth } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
 import CategorySwiper from "@/components/CategorySwiper";
 import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
 import styles from "./page.module.css";
+import LoadingMessage from "@/components/LoadingMessage";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+
+
 
 const POINTS = { toku: 10, good: 6 } as const;
 type TypeKind = keyof typeof POINTS;
@@ -33,36 +36,11 @@ export default function RecordPage() {
     const [saving, setSaving] = useState(false);
     const [msg, setMsg] = useState("");
 
-    // 未ログイン時リダイレクト
-    const [user, setUser] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
-    useEffect(() => {
-        if (typeof window === "undefined") return;
-
-        const cachedAuth = localStorage.getItem("authUser");
-        if (cachedAuth) {
-            setUser(JSON.parse(cachedAuth));
-            setLoading(false); // ✅ キャッシュ即表示
-        }
-
-        const unsubscribe = onAuthStateChanged(auth, (u) => {
-            if (!u) {
-                localStorage.removeItem("authUser");
-                router.push("/login");
-                return;
-            }
-            const authData = { uid: u.uid, email: u.email, displayName: u.displayName || null };
-            localStorage.setItem("authUser", JSON.stringify(authData));
-            setUser(authData);
-            setLoading(false);
-        });
-
-        return () => unsubscribe();
-    }, [router]);
-
+    // ログイン処理
+    const { user, loading } = useAuthGuard({ requireLogin: true });
     // 将来：type が "good" のときは GOOD_TREE に入れ替える想定
     const tree = useMemo(() => (type === "toku" ? TOKU_TREE : GOOD_TREE), [type]);
+    if (loading) return <LoadingMessage />;
 
     const canSubmit = !!(type && dateStr && (sub || category));
 
