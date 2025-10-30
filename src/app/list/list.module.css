@@ -20,6 +20,8 @@
     display: flex;
     gap: 8px;
     align-items: center;
+    justify-content: flex-end;
+    margin-top: 4px;
 }
 
 /* カード一枚ずつ（recordのpanelに合わせる） */
@@ -118,6 +120,25 @@
 .deleteBtn:hover {
     background: #fee2e2;
 }
+
+.secondaryBtn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.15s ease;
+    font-weight: 500;
+    }
+
+    .secondaryBtn:hover {
+        background: #e5e7eb;
+    }
+
+    .secondaryBtn:active {
+        background: #d1d5db;
+    }
 
 /* 「データがない」表示 */
 .empty {

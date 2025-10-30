@@ -23,7 +23,7 @@ export default function HomePage() {
     return (
         <div className="flex flex-col items-center justify-center h-screen space-y-6">
             <h1 className="text-2xl font-bold">ホーム</h1>
-            <p>こんにちは、{user?.email} さん</p>
+            <p>こんにちは、{user?.username} さん</p>
 
             <div className="flex space-x-4">
                 <PrimaryButton
