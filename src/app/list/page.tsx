@@ -39,10 +39,10 @@ export default function RecordListPage() {
                 const ref = collection(db, "users", user.uid, "records");
                 const q = query(ref, orderBy("occurredOn", "desc"));
                 const snap = await getDocs(q);
-                const data = snap.docs.map((d) => ({
-                    id: d.id,
-                    ...(d.data() as RecordItem),
-                }));
+                const data = snap.docs.map((d) => {
+                    const { id, ...rest } = d.data() as RecordItem;
+                    return { id: d.id, ...rest };
+                });
                 setRecords(data);
             } catch (e) {
                 console.error("データ取得に失敗:", e);
