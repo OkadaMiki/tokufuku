@@ -32,6 +32,11 @@ export default function HomePage() {
                     color="green"
                 />
                 <PrimaryButton
+                    text="記録一覧ページへ"
+                    onClick={() => router.push('/list')}
+                    color="green"
+                />
+                <PrimaryButton
                     text="ログアウト"
                     onClick={handleLogout}
                     color="red"
