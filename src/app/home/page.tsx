@@ -3,14 +3,18 @@
 import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { useState } from "react";
 
 import LoadingMessage from "@/components/LoadingMessage";
 import PrimaryButton from "@/components/PrimaryButton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import DailyChallengeModal from '@/components/DailyChallengeModal';
 
 export default function HomePage() {
     const router = useRouter();
     const { user, loading } = useAuthGuard({ requireLogin: true });
+    const [open, setOpen] = useState(false);
+
 
     if (loading) return <LoadingMessage />;
 
@@ -30,6 +34,24 @@ export default function HomePage() {
                     text="記録ページへ"
                     onClick={() => router.push('/record')}
                     color="green"
+                />
+
+                <button
+                    onClick={() => setOpen(true)}
+                    style={{
+                        padding: "10px 14px", borderRadius: 10, border: "1px solid #d1d5db",
+                        background: "#fff", width: "fit-content", cursor: "pointer"
+                    }}
+                >
+                    デイリーチャレンジを開く
+                </button>
+                <DailyChallengeModal
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    onGoFeed={() => {/* ご飯画面へ */ }}
+                    onGoOmikuji={() => {/* おみくじ画面へ */ }}
+                    onGoRecord={() => router.push('/record')}
+                    state={{ completed: { feed: false, omikuji: true, record: false } }}
                 />
                 <PrimaryButton
                     text="ログアウト"

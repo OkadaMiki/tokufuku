@@ -1,0 +1,39 @@
+.backdrop{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.35);
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+}
+.panel{
+    width: min(92vw, 420px);
+    max-height: 80vh;
+    overflow: auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+}
+.title{ 
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700; }
+.closeBtn{
+    appearance: none;
+    border: none;
+    background: #f3f4f6; cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+.body{
+    padding: 14px;
+    display: grid;
+    gap: 12px; }
