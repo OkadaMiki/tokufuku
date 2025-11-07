@@ -25,7 +25,18 @@ export default function DailyChallengeModal({
     if (!open) return null;
 
     const completed = state?.completed || {};
-    // 右側は ↪（誘導） or 完了表示 のみ
+
+    // ① 追記：ベース3つの達成数を数える
+    const baseIds: ChallengeId[] = ["feed", "omikuji", "record"];
+    const doneCount = baseIds.filter((id) => completed[id]).length;
+    const metaDone = doneCount >= 3;
+
+    // ② 追記：未達のとき、次に誘導すべきチャレンジを決める（優先順は自由に調整OK）
+    const goNextIncomplete = () => {
+        if (completed.feed !== true && onGoFeed) return onGoFeed();
+        if (completed.omikuji !== true && onGoOmikuji) return onGoOmikuji();
+        if (completed.record !== true && onGoRecord) return onGoRecord();
+    };
 
     return (
         <div className={styles.backdrop} onClick={onClose} aria-modal="true" role="dialog">
@@ -48,9 +59,15 @@ export default function DailyChallengeModal({
                     />
 
                     <ChallengeRow
-                        label="徳を記録しよう"
+                        label="今日の記録をしよう"
                         done={!!completed.record}
                         onAction={!completed.record ? onGoRecord : undefined}
+                    />
+
+                    <ChallengeRow
+                        label={`チャレンジを3つ完了しよう（${doneCount}/3）`}
+                        done={metaDone}
+                        onAction={!metaDone ? goNextIncomplete : undefined}
                     />
                 </div>
 
