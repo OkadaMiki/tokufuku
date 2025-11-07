@@ -1,5 +1,6 @@
 .page { display: grid; gap: 16px; padding: 12px; }
 .header { display: flex; justify-content: space-between; align-items: center; }
+
 .title { font-weight: 700; font-size: 18px; }
 .typeSwitch { display: flex; gap: 8px; }
 .typeBtn {
@@ -36,3 +37,4 @@
 
 .actionRow { display: flex; gap: 10px; align-items: center; }
 .msg { font-size: 13px; color: #374151; }
+

@@ -9,6 +9,7 @@ import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
 import styles from "./page.module.css";
 import LoadingMessage from "@/components/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import Footer from "@/components/FooterNav";
 
 
 
@@ -139,6 +140,7 @@ export default function RecordPage() {
                 </button>
                 {msg && <span className={styles.msg}>{msg}</span>}
             </section>
+            <Footer />
         </div>
     );
 

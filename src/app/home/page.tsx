@@ -7,6 +7,7 @@ import { auth } from '@/lib/firebase';
 import LoadingMessage from "@/components/LoadingMessage";
 import PrimaryButton from "@/components/PrimaryButton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import FooterNav from '@/components/FooterNav';
 
 export default function HomePage() {
     const router = useRouter();
@@ -42,6 +43,7 @@ export default function HomePage() {
                     color="red"
                 />
             </div>
+            <FooterNav />
         </div>
     );
 }

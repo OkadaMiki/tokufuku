@@ -15,6 +15,7 @@ import {
 import LoadingMessage from "@/components/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import styles from "./list.module.css";
+import Footer from "@/components/FooterNav";
 
 type RecordItem = {
     id: string;
@@ -126,6 +127,7 @@ export default function RecordListPage() {
                     );
                 })
             )}
+            <Footer />
         </div>
     );
 }
