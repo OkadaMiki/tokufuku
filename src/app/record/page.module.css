@@ -1,10 +1,10 @@
 .page {
   display: grid;
-  gap: 16px;
+  gap: 12px;
   padding: 12px; }
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center; }
 .title {
   font-weight: 700;
@@ -33,7 +33,7 @@
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(0,0,0,.06);
-  padding: 12px;
+  padding: 8px;
   display: grid;
   gap: 10px;
 }
@@ -92,6 +92,7 @@
 .actionRow {
   display: flex;
   gap: 10px;
+  justify-content: center;
   align-items: center;
 }
 .msg {
