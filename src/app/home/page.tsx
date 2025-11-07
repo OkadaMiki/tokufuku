@@ -7,8 +7,10 @@ import { useState } from "react";
 
 import LoadingMessage from "@/components/LoadingMessage";
 import PrimaryButton from "@/components/PrimaryButton";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
+import FooterNav from '@/components/FooterNav';
 import DailyChallengeModal from '@/components/DailyChallengeModal';
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+
 
 export default function HomePage() {
     const router = useRouter();
@@ -54,11 +56,17 @@ export default function HomePage() {
                     state={{ completed: { feed: false, omikuji: true, record: false } }}
                 />
                 <PrimaryButton
+                    text="記録一覧ページへ"
+                    onClick={() => router.push('/list')}
+                    color="green"
+                />
+                <PrimaryButton
                     text="ログアウト"
                     onClick={handleLogout}
                     color="red"
                 />
             </div>
+            <FooterNav />
         </div>
     );
 }
