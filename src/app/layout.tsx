@@ -3,7 +3,7 @@ import { Zen_Maru_Gothic } from "next/font/google";
 import "./globals.css";
 
 const zenMaru = Zen_Maru_Gothic({
-  subsets: ["japanese"],
+  subsets: ["latin"],
   weight: ["300", "400", "500", "700", "900"],
   display: "swap",
 });
