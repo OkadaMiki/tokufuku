@@ -9,8 +9,8 @@ import LoadingMessage from "@/components/LoadingMessage";
 import PrimaryButton from "@/components/PrimaryButton";
 import FooterNav from '@/components/FooterNav';
 import DailyChallengeModal from '@/components/DailyChallengeModal';
+import LevelGauge from '@/components/LevelGauge';
 import { useAuthGuard } from "@/hooks/useAuthGuard";
-
 
 export default function HomePage() {
     const router = useRouter();
@@ -28,15 +28,17 @@ export default function HomePage() {
 
     return (
         <div className="flex flex-col items-center justify-center h-screen space-y-6">
-            <h1 className="text-2xl font-bold">ホーム</h1>
-            <p>こんにちは、{user?.username} さん</p>
-
             <div className="flex space-x-4">
-                <PrimaryButton
+                <LevelGauge level={5} name={'てすたろう'} value={13}
+                // ↑コーディング用テストデータ
+                />
+                {/* <PrimaryButton
                     text="記録ページへ"
                     onClick={() => router.push('/record')}
                     color="green"
-                />
+                    /> */}
+
+                <p>こんにちは、{user?.username} さん</p>
 
                 <button
                     onClick={() => setOpen(true)}
@@ -55,11 +57,11 @@ export default function HomePage() {
                     onGoRecord={() => router.push('/record')}
                     state={{ completed: { feed: false, omikuji: true, record: false } }}
                 />
-                <PrimaryButton
+                {/* <PrimaryButton
                     text="記録一覧ページへ"
                     onClick={() => router.push('/list')}
                     color="green"
-                />
+                /> */}
                 <PrimaryButton
                     text="ログアウト"
                     onClick={handleLogout}
