@@ -47,7 +47,7 @@ export default function HomePage() {
                         background: "#fff", width: "fit-content", cursor: "pointer"
                     }}
                 >
-                    デイリーチャレンジを開く
+                    まいにちチャレンジを開く
                 </button>
                 <DailyChallengeModal
                     open={open}
