@@ -3,5 +3,42 @@ button,
 input,
 select,
 textarea {
-  font: inherit;         /* font-size/line-height/font-family を一括継承 */
+  font: inherit;
+  /* font-size/line-height/font-family を一括継承 */
+}
+
+/* app/globals.css */
+
+/* UAスタイルの余白を消す */
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* 全ページ共通の左右ガター */
+:root {
+  --gutter: 16px;
+}
+
+.siteShell {
+  min-height: 100dvh;
+  padding: var(--gutter);
+}
+
+/* iPhoneのノッチ等に配慮（対応環境のみ） */
+@supports (padding: max(0px)) {
+  .siteShell {
+    padding-left: max(var(--gutter), env(safe-area-inset-left));
+    padding-right: max(var(--gutter), env(safe-area-inset-right));
+  }
 }

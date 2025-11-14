@@ -18,7 +18,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja">
-      <body className={zenMaru.className}>{children}</body>
+      <body className={zenMaru.className}>
+        <div className="siteShell">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

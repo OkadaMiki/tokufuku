@@ -1,0 +1,89 @@
+.page {
+    min-height: 100dvh;
+}
+
+.stack {
+    display: grid;
+    grid-auto-flow: row;
+    row-gap: 24px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+    flex-wrap: wrap;
+}
+
+.greeting {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.6;
+    color: #222222;
+}
+
+/* ボタン群 */
+.primaryButton {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    min-height: 40px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #111111;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.primaryButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ghostButton {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    min-height: 40px;
+    border: 1px dashed #c7c7c7;
+    border-radius: 10px;
+    background: transparent;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.logout {
+    appearance: none;
+    margin-top: 4px;
+    display: inline-block;
+    border: none;
+    background: transparent;
+    color: #888888;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* レスポンシブ微調整 */
+@media (min-width: 640px) {
+    .stack {
+        row-gap: 28px;
+    }
+
+    .greeting {
+        font-size: 17px;
+    }
+}
