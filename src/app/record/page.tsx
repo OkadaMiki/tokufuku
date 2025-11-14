@@ -10,7 +10,8 @@ import styles from "./page.module.css";
 import LoadingMessage from "@/components/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import Footer from "@/components/FooterNav";
-
+import { addExp, loadPlayer, savePlayer } from "@/lib/levelSystem";
+import { getRequiredExp } from "@/lib/levelSystem";
 
 
 const POINTS = { toku: 10, good: 6 } as const;
@@ -23,6 +24,15 @@ function todayISO() {
     // padStart → 2文字にして空いたら0をいれる
     const dd = String(d.getDate()).padStart(2, "0");
     return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+function showStatus(player: any) {
+    const nextReq = getRequiredExp(player.level);
+    console.log("=== 現在のステータス ===");
+    console.log(`Lv.${player.level}`);
+    console.log(`Exp: ${player.exp}/${nextReq}`);
+    console.log(`Total: ${player.totalExp}`);
+    console.log("=========================");
 }
 
 // コンポーネント本体
@@ -71,13 +81,20 @@ export default function RecordPage() {
                 points: POINTS[type],
                 createdAt: serverTimestamp(),
             });
-            setMsg("保存しました"); setMemo(""); setSub("");
+            let player = loadPlayer(); // ローカルデータ読み込み
+            player = addExp(player, category); // カテゴリに応じたXP加算
+            savePlayer(player); // ローカルへ保存
+            showStatus(player); // コンソール出力
+
+                setMsg(`保存しました！ +${category}で経験値獲得`);
+                setMemo(""); setSub("");
         } catch (e) {
             console.error(e);
             setMsg("保存に失敗しました");
         } finally {
             setSaving(false);
         }
+        
     };
 
     return (
@@ -140,7 +157,7 @@ export default function RecordPage() {
                 </button>
                 {msg && <span className={styles.msg}>{msg}</span>}
             </section>
-            <Footer />
+            {/* <Footer /> */}
         </div>
     );
 

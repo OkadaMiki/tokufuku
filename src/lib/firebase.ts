@@ -7,7 +7,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-// 🔹 .env.local に保存されている環境変数を使用
+// .env.local に保存されている環境変数を使用
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
@@ -17,10 +17,10 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
 
-// 🔹 二重初期化防止
+// 二重初期化防止
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-// ✅ Firestore（新推奨構文）
+// Firestore（新推奨構文）
 // IndexedDBキャッシュを利用して2回目以降の読み込みを即時化
 export const db = initializeFirestore(app, {
     localCache: persistentLocalCache({
@@ -28,5 +28,5 @@ export const db = initializeFirestore(app, {
     }),
 });
 
-// ✅ Auth
+// Auth
 export const auth = getAuth(app);
