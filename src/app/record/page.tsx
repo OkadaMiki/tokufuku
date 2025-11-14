@@ -86,15 +86,15 @@ export default function RecordPage() {
             savePlayer(player); // ローカルへ保存
             showStatus(player); // コンソール出力
 
-                setMsg(`保存しました！ +${category}で経験値獲得`);
-                setMemo(""); setSub("");
+            setMsg(`保存しました！ +${category}で経験値獲得`);
+            setMemo(""); setSub("");
         } catch (e) {
             console.error(e);
             setMsg("保存に失敗しました");
         } finally {
             setSaving(false);
         }
-        
+
     };
 
     return (
@@ -157,7 +157,7 @@ export default function RecordPage() {
                 </button>
                 {msg && <span className={styles.msg}>{msg}</span>}
             </section>
-            {/* <Footer /> */}
+            <Footer />
         </div>
     );
 
