@@ -1,12 +1,6 @@
 // src/lib/levelSystem.ts
 import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
-
-// プレイヤー情報構造
-export type Player = {
-  level: number;
-  exp: number;       // 現在レベル内の経験値
-  totalExp: number;  // 総経験値
-};
+import type { PlayerData } from "@/lib/playerData";
 
 //  全カテゴリを統合 
 const allCategories = [...TOKU_TREE, ...GOOD_TREE];
@@ -23,7 +17,7 @@ export const getRequiredExp = (level: number): number => {
 };
 
 // 経験値加算＆レベルアップ判定
-export const addExp = (player: Player, category: string): Player => {
+export const addExp = (player: PlayerData, category: string): PlayerData => {
   const gain = getCategoryExp(category);
 
   if (gain == null) {
@@ -57,18 +51,30 @@ export const addExp = (player: Player, category: string): Player => {
 };
 
 // 保存されたプレイヤーデータを読み込み
-export const loadPlayer = (): Player => {
+export const loadPlayer = (): PlayerData => {
   if (typeof window === "undefined") return { level: 1, exp: 0, totalExp: 0 };
   const raw = localStorage.getItem("player");
   return raw ? JSON.parse(raw) : { level: 1, exp: 0, totalExp: 0 };
 };
 
 // プレイヤーデータを保存（加筆）
-export const savePlayer = (player: Player): void => {
+export const savePlayer = (player: PlayerData): void => {
   try {
     localStorage.setItem("player", JSON.stringify(player));
     console.log("✅ Player saved:", player);
   } catch (err) {
     console.error("❌ Failed to save player:", err);
   }
+};
+
+// 残り経験値
+export const getRemainingExp = (player: PlayerData): number => {
+  const required = getRequiredExp(player.level);
+  return required - player.exp;
+};
+
+// 進捗率（バー用）
+export const getExpRate = (player: PlayerData): number => {
+  const required = getRequiredExp(player.level);
+  return player.exp / required;
 };
