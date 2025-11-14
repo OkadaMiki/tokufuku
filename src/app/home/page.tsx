@@ -53,9 +53,9 @@ export default function HomePage() {
                     open={open}
                     onClose={() => setOpen(false)}
                     onGoFeed={() => {/* ご飯画面へ */ }}
-                    onGoOmikuji={() => {/* おみくじ画面へ */ }}
+                    onGoUranai={() => {/* おみくじ画面へ */ }}
                     onGoRecord={() => router.push('/record')}
-                    state={{ completed: { feed: false, omikuji: true, record: false } }}
+                    state={{ completed: { feed: false, uranai: true, record: false } }}
                 />
                 {/* <PrimaryButton
                     text="記録一覧ページへ"

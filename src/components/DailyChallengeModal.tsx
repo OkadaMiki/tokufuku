@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import styles from "./DailyChallengeModal.module.css";
 
-type ChallengeId = "feed" | "omikuji" | "record";
+type ChallengeId = "feed" | "uranai" | "record";
 
 export type DailyChallengeState = {
     completed: Partial<Record<ChallengeId, boolean>>;
@@ -14,27 +14,27 @@ type Props = {
     onClose: () => void;
     // 未達成の時だけ押せる誘導ハンドラ
     onGoFeed?: () => void;
-    onGoOmikuji?: () => void;
+    onGoUranai?: () => void;
     onGoRecord?: () => void;
     state?: DailyChallengeState;
 };
 
 export default function DailyChallengeModal({
-    open, onClose, onGoFeed, onGoOmikuji, onGoRecord, state,
+    open, onClose, onGoFeed, onGoUranai, onGoRecord, state,
 }: Props) {
     if (!open) return null;
 
     const completed = state?.completed || {};
 
     // ① 追記：ベース3つの達成数を数える
-    const baseIds: ChallengeId[] = ["feed", "omikuji", "record"];
+    const baseIds: ChallengeId[] = ["feed", "uranai", "record"];
     const doneCount = baseIds.filter((id) => completed[id]).length;
     const metaDone = doneCount >= 3;
 
     // ② 追記：未達のとき、次に誘導すべきチャレンジを決める（優先順は自由に調整OK）
     const goNextIncomplete = () => {
         if (completed.feed !== true && onGoFeed) return onGoFeed();
-        if (completed.omikuji !== true && onGoOmikuji) return onGoOmikuji();
+        if (completed.uranai !== true && onGoUranai) return onGoUranai();
         if (completed.record !== true && onGoRecord) return onGoRecord();
     };
 
@@ -54,8 +54,8 @@ export default function DailyChallengeModal({
 
                     <ChallengeRow
                         label="今日の占いをしよう"
-                        done={!!completed.omikuji}
-                        onAction={!completed.omikuji ? onGoOmikuji : undefined}
+                        done={!!completed.uranai}
+                        onAction={!completed.uranai ? onGoUranai : undefined}
                     />
 
                     <ChallengeRow
