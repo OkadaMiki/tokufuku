@@ -1,6 +1,6 @@
 .wrapper {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 .headerRow {
   display: flex;

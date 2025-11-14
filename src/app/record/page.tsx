@@ -1,8 +1,8 @@
 'use client'
 
-import { useMemo, useState} from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { db , auth } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import CategorySwiper from "@/components/CategorySwiper";
 import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
@@ -101,7 +101,7 @@ export default function RecordPage() {
         <div className={styles.page}>
             {/* ヘッダ */}
             <header className={styles.header}>
-                <h1 className={styles.title}>{type === "toku" ? "とくつみ記録" : "いいこと記録"}</h1>
+                {/* <h1 className={styles.title}>{type === "toku" ? "とくつみ記録" : "いいこと記録"}</h1> */}
                 <div className={styles.typeSwitch}>
                     <button
                         className={`${styles.typeBtn} ${type === "toku" ? styles.typeActive : ""}`}
