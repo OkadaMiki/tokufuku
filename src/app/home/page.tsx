@@ -10,10 +10,12 @@ import PrimaryButton from "@/components/PrimaryButton";
 import FooterNav from '@/components/FooterNav';
 import DailyChallengeModal from '@/components/DailyChallengeModal';
 import LevelGauge from '@/components/LevelGauge';
+import { loadPlayer } from "@/lib/levelSystem";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function HomePage() {
     const router = useRouter();
+    const player = loadPlayer();
     const { user, loading } = useAuthGuard({ requireLogin: true });
     const [open, setOpen] = useState(false);
 
@@ -29,9 +31,7 @@ export default function HomePage() {
     return (
         <div className="flex flex-col items-center justify-center h-screen space-y-6">
             <div className="flex space-x-4">
-                <LevelGauge level={5} name={'てすたろう'} value={13}
-                // ↑コーディング用テストデータ
-                />
+                <LevelGauge player={player} />
                 {/* <PrimaryButton
                     text="記録ページへ"
                     onClick={() => router.push('/record')}

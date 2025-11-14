@@ -157,7 +157,7 @@ export default function RecordPage() {
                 </button>
                 {msg && <span className={styles.msg}>{msg}</span>}
             </section>
-            {/* <Footer /> */}
+            <Footer />
         </div>
     );
 

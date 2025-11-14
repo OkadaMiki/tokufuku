@@ -1,19 +1,23 @@
 import styles from "./LevelGauge.module.css";
+import type { PlayerData } from "@/lib/playerData";
+import { getRequiredExp, getRemainingExp } from "@/lib/levelSystem";
+
 
 type Props = {
-    level: number;
-    name: string;
-    value: number;   // 現在の経験値
-    max?: number;    // レベルアップに必要な値（既定 100）
-    // ?はあってもなくてもいい。
+    player: PlayerData;
 };
 
 
 
-export default function LevelGauge({ level, name, value, max = 100 }: Props) {
+export default function LevelGauge({ player }: Props) {
+    if (!player) return null;
+    const level = player.level;
+    const name = player.name;
+    const value = player.exp;
+    const max = getRequiredExp(player.level);
+    const remain = getRemainingExp(player);
+    const percent = Math.round((value / max) * 100);
     const clampedNow = Math.max(0, Math.min(value, max));
-    const percent = max <= 0 ? 100 : Math.round((clampedNow / max) * 100);
-    const remain = Math.max(0, max - clampedNow);
 
     return (
         <div className={styles.levelGauge}>
