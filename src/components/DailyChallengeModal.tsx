@@ -53,7 +53,7 @@ export default function DailyChallengeModal({
                     />
 
                     <ChallengeRow
-                        label="おみくじを引こう"
+                        label="今日の占いをしよう"
                         done={!!completed.omikuji}
                         onAction={!completed.omikuji ? onGoOmikuji : undefined}
                     />
