@@ -44,7 +44,6 @@ export const loadPlayer = (): PlayerData => {
     savePlayer(player);
 
     return player;
-
   } catch (err) {
     console.error("Failed to load player from localStorage:", err);
     return { name: "プレイヤー", level: 1, exp: 0, totalExp: 0 };

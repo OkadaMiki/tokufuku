@@ -1,10 +1,13 @@
 import { DAILY_CHALLENGE_EXP } from "@/constants/categories";
-import type { PlayerData, ChallengeId } from "@/lib/playerData";
+import type { ChallengeId, PlayerData } from "@/lib/playerData";
 import { calculateExpUpdate, getRequiredExp } from "./calculator";
 import { savePlayer } from "./storage";
 
 // デイリーチャレンジ完了
-export const completeDailyChallenge = (player: PlayerData, id: ChallengeId): PlayerData => {
+export const completeDailyChallenge = (
+  player: PlayerData,
+  id: ChallengeId,
+): PlayerData => {
   const current = player.dailyChallenge?.completed || {};
   if (current[id]) return player; // 既に完了済みなら何もしない
 
@@ -13,7 +16,7 @@ export const completeDailyChallenge = (player: PlayerData, id: ChallengeId): Pla
   const { level, exp, totalExp } = calculateExpUpdate(player, gain);
 
   console.log(
-    `Daily Challenge '${id}' Complete! +${gain} XP → Lv${level} (${exp}/${getRequiredExp(level)})`
+    `Daily Challenge '${id}' Complete! +${gain} XP → Lv${level} (${exp}/${getRequiredExp(level)})`,
   );
 
   const updated: PlayerData = {

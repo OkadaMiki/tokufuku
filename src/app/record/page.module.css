@@ -41,7 +41,7 @@
 .panel {
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   padding: 8px;
   display: grid;
   gap: 10px;
@@ -84,7 +84,7 @@
 }
 
 .primaryBtn:disabled {
-  opacity: .5;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 

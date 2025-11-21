@@ -1,163 +1,170 @@
 .page {
-    display: grid;
-    gap: 16px;
-    padding: 12px;
+  display: grid;
+  gap: 16px;
+  padding: 12px;
 }
 
 /* 共通のヘッダー */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .title {
-    font-weight: 700;
-    font-size: 18px;
+  font-weight: 700;
+  font-size: 18px;
 }
 
 .filterRow {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: flex-end;
-    margin-top: 4px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 4px;
 }
 
 /* カード一枚ずつ（recordのpanelに合わせる） */
 .card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
-    padding: 12px;
-    display: grid;
-    gap: 8px;
-    transition: transform .1s ease, box-shadow .1s ease;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
 }
 
 .card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* 日付・カテゴリなどの行 */
 .cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .date {
-    font-size: 13px;
-    font-weight: 600;
-    color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
 }
 
 .typeBadge {
-    font-size: 12px;
-    padding: 3px 8px;
-    border-radius: 8px;
-    font-weight: 600;
-    border: 1px solid transparent;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid transparent;
 }
 
 .typeToku {
-    background: #ecfdf5;
-    color: #065f46;
-    border-color: #a7f3d0;
+  background: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
 }
 
 .typeGood {
-    background: #eff6ff;
-    color: #1e40af;
-    border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
 }
 
 /* メインコンテンツ */
 .cardBody {
-    font-size: 14px;
-    color: #374151;
-    white-space: pre-wrap;
-    line-height: 1.4;
+  font-size: 14px;
+  color: #374151;
+  white-space: pre-wrap;
+  line-height: 1.4;
 }
 
 /* メモ（任意） */
 .memo {
-    font-size: 13px;
-    color: #6b7280;
-    margin-top: 4px;
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 4px;
 }
 
 /* アクション行 */
 .actionRow {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
 }
 
 /* 削除などのボタン */
 .actionBtn {
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background: #f9fafb;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background .1s ease;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.1s ease;
 }
 
 .actionBtn:hover {
-    background: #f3f4f6;
+  background: #f3f4f6;
 }
 
 .deleteBtn {
-    color: #b91c1c;
-    border-color: #fecaca;
-    background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+  background: #fef2f2;
 }
 
 .deleteBtn:hover {
-    background: #fee2e2;
+  background: #fee2e2;
 }
 
 .secondaryBtn {
-    padding: 8px 12px;
-    border-radius: 10px;
-    border: 1px solid #d1d5db;
-    background: #f3f4f6;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.15s ease;
-    font-weight: 500;
-    }
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s ease;
+  font-weight: 500;
+}
 
-    .secondaryBtn:hover {
-        background: #e5e7eb;
-    }
+.secondaryBtn:hover {
+  background: #e5e7eb;
+}
 
-    .secondaryBtn:active {
-        background: #d1d5db;
-    }
+.secondaryBtn:active {
+  background: #d1d5db;
+}
 
 /* 「データがない」表示 */
 .empty {
-    text-align: center;
-    padding: 40px 0;
-    color: #9ca3af;
-    font-size: 14px;
+  text-align: center;
+  padding: 40px 0;
+  color: #9ca3af;
+  font-size: 14px;
 }
 
 /* ローディングなど */
 .loading {
-    text-align: center;
-    padding: 40px 0;
-    color: #6b7280;
-    font-size: 14px;
-    animation: pulse 1.2s ease-in-out infinite;
+  text-align: center;
+  padding: 40px 0;
+  color: #6b7280;
+  font-size: 14px;
+  animation: pulse 1.2s ease-in-out infinite;
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: .5; }
-    50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }

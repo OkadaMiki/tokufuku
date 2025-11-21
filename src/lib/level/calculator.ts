@@ -1,4 +1,4 @@
-import { TOKU_CATEGORIES, GOOD_CATEGORIES } from "@/constants/categories";
+import { GOOD_CATEGORIES, TOKU_CATEGORIES } from "@/constants/categories";
 import type { PlayerData } from "@/lib/playerData";
 import { savePlayer } from "./storage";
 
@@ -19,7 +19,7 @@ export const getRequiredExp = (level: number): number => {
 // 経験値計算ロジック（共通化）
 export const calculateExpUpdate = (player: PlayerData, gain: number) => {
   let newExp = player.exp + gain;
-  let newTotal = player.totalExp + gain;
+  const newTotal = player.totalExp + gain;
   let newLevel = player.level;
 
   while (newExp >= getRequiredExp(newLevel)) {
@@ -59,7 +59,7 @@ export const addExp = (player: PlayerData, category: string): PlayerData => {
   const { level, exp, totalExp } = calculateExpUpdate(player, gain);
 
   console.log(
-    `+${gain} XP (${category}) → Lv${level} (${exp}/${getRequiredExp(level)})`
+    `+${gain} XP (${category}) → Lv${level} (${exp}/${getRequiredExp(level)})`,
   );
 
   const updated: PlayerData = {

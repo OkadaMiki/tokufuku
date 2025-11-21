@@ -19,9 +19,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={zenMaru.className}>
-        <div className="siteShell">
-          {children}
-        </div>
+        <div className="siteShell">{children}</div>
       </body>
     </html>
   );

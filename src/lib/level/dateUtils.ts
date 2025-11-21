@@ -7,12 +7,14 @@ export const getBusinessDate = (d: Date): string => {
   return copy.toDateString(); // "Mon Nov 21 2025" 形式
 };
 
-export const shouldResetDailyChallenge = (lastLoginDate: string | undefined): boolean => {
-    const now = new Date();
-    const lastDate = lastLoginDate ? new Date(lastLoginDate) : null;
-    
-    const currentBusinessDate = getBusinessDate(now);
-    const lastBusinessDate = lastDate ? getBusinessDate(lastDate) : null;
+export const shouldResetDailyChallenge = (
+  lastLoginDate: string | undefined,
+): boolean => {
+  const now = new Date();
+  const lastDate = lastLoginDate ? new Date(lastLoginDate) : null;
 
-    return currentBusinessDate !== lastBusinessDate;
+  const currentBusinessDate = getBusinessDate(now);
+  const lastBusinessDate = lastDate ? getBusinessDate(lastDate) : null;
+
+  return currentBusinessDate !== lastBusinessDate;
 };

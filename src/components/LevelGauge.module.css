@@ -1,76 +1,76 @@
 .levelGauge {
-    width: 100%;
-    padding: 12px;
-    background: #d9d9d9;
-    border-radius: 16px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  padding: 12px;
+  background: #d9d9d9;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .nameTag {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 12px;
-    background: #ffffff;
-    border-radius: 15px 15px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #ffffff;
+  border-radius: 15px 15px 0 0;
 }
 
 .levelBadge {
-    flex: 0 0 auto;
-    width: 53px;
-    height: 53px;
-    display: grid;
-    place-items: center;
-    background: #d9d9d9;
-    border-radius: 9999px;
+  flex: 0 0 auto;
+  width: 53px;
+  height: 53px;
+  display: grid;
+  place-items: center;
+  background: #d9d9d9;
+  border-radius: 9999px;
 }
 
 .levelNum {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1;
-    color: #333333;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: #333333;
 }
 
 .name {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.2;
-    color: #222222;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #222222;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .progress {
-    margin-top: 10px;
-    width: 100%;
-    height: 10px;
-    background: #ffffff;
-    border-radius: 9999px;
-    overflow: hidden;
+  margin-top: 10px;
+  width: 100%;
+  height: 10px;
+  background: #ffffff;
+  border-radius: 9999px;
+  overflow: hidden;
 }
 
 .progressFill {
-    display: block;
-    height: 100%;
-    background: #8a8a8a;
-    border-radius: 9999px;
-    transition: width 200ms ease;
+  display: block;
+  height: 100%;
+  background: #8a8a8a;
+  border-radius: 9999px;
+  transition: width 200ms ease;
 }
 
 .caption {
-    margin: 6px 0 0;
-    text-align: right;
-    font-size: 15px;
-    font-weight: 500;
-    color: #222222;
+  margin: 6px 0 0;
+  text-align: right;
+  font-size: 15px;
+  font-weight: 500;
+  color: #222222;
 }
 
 .pointNum {
-    margin: 0 4px;
-    font-weight: 700;
-    font-size: 14px;
-    color: #111111;
+  margin: 0 4px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #111111;
 }
