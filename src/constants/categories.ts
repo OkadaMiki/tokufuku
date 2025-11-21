@@ -171,3 +171,9 @@ export function getChildrenFrom(parentKey: ParentKey) {
 export function isOtherChildLabel(label: string) {
   return label === OTHER_CHILD_LABEL;
 }
+
+export const DAILY_CHALLENGE_EXP: Record<string, number> = {
+  feed: 50,
+  uranai: 50,
+  record: 50,
+};
