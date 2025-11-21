@@ -4,11 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import styles from "./CategorySwiper.module.css";
 
 type Props = {
-    data: { 
-        key: string; 
-        label: string; 
-        children: readonly { key: string; label: string }[] 
-    }[];
+    data: { key: string; subs: string[] }[];
     onPick: (category: string, sub: string) => void; // 選択結果を親へ返す
 };
 
@@ -36,7 +32,7 @@ export default function CategorySwiper({ data, onPick }: Props) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.headerRow}>
-                <h3 className={styles.title}>{data[page]?.label ?? "カテゴリ"}</h3>
+                <h3 className={styles.title}>{data[page]?.key ?? "カテゴリ"}</h3>
                 <div className={styles.arrowGroup}>
                     <button className={styles.arrowBtn} onClick={() => go(-1)} disabled={page === 0} aria-label="前へ">←</button>
                     <button className={styles.arrowBtn} onClick={() => go(1)} disabled={page === pages - 1} aria-label="次へ">→</button>
@@ -50,17 +46,17 @@ export default function CategorySwiper({ data, onPick }: Props) {
             >
                 <div className={styles.trackInner}>
                     {data.map((cat) => (
-                        <section key={cat.key} className={styles.slide} aria-label={cat.label}>
+                        <section key={cat.key} className={styles.slide} aria-label={cat.key}>
                             <div className={styles.slidePanel}>
                                 <div className={styles.grid}>
-                                    {cat.children.map((child) => (
+                                    {cat.subs.map((sub) => (
                                         <button
-                                            key={child.key}
+                                            key={sub}
                                             type="button"
                                             className={styles.subBtn}
-                                            onClick={() => onPick(cat.label, child.label)}
+                                            onClick={() => onPick(cat.key, sub)}
                                         >
-                                            {child.label}
+                                            {sub}
                                         </button>
                                     ))}
                                 </div>

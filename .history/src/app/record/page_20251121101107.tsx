@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { db, auth } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import CategorySwiper from "@/components/CategorySwiper";
-import { TOKU_CATEGORIES, GOOD_CATEGORIES } from "@/constants/categories";
+import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
 import styles from "./page.module.css";
 import LoadingMessage from "@/components/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
@@ -50,7 +50,7 @@ export default function RecordPage() {
     // ログイン処理
     const { user, loading } = useAuthGuard({ requireLogin: true });
     // 将来：type が "good" のときは GOOD_TREE に入れ替える想定
-    const tree = useMemo(() => (type === "toku" ? TOKU_CATEGORIES : GOOD_CATEGORIES), [type]);
+    const tree = useMemo(() => (type === "toku" ? TOKU_TREE : GOOD_TREE), [type]);
     if (loading) return <LoadingMessage />;
 
     const canSubmit = !!(type && dateStr && (sub || category));

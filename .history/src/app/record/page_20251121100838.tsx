@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { db, auth } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import CategorySwiper from "@/components/CategorySwiper";
-import { TOKU_CATEGORIES, GOOD_CATEGORIES } from "@/constants/categories";
+import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
 import styles from "./page.module.css";
 import LoadingMessage from "@/components/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import Footer from "@/components/FooterNav";
-import { addExp, loadPlayer, savePlayer, completeDailyChallenge } from "@/lib/levelSystem";
+import { addExp, loadPlayer, savePlayer } from "@/lib/levelSystem";
 import { getRequiredExp } from "@/lib/levelSystem";
 
 
@@ -50,7 +50,7 @@ export default function RecordPage() {
     // ログイン処理
     const { user, loading } = useAuthGuard({ requireLogin: true });
     // 将来：type が "good" のときは GOOD_TREE に入れ替える想定
-    const tree = useMemo(() => (type === "toku" ? TOKU_CATEGORIES : GOOD_CATEGORIES), [type]);
+    const tree = useMemo(() => (type === "toku" ? TOKU_TREE : GOOD_TREE), [type]);
     if (loading) return <LoadingMessage />;
 
     const canSubmit = !!(type && dateStr && (sub || category));
@@ -83,7 +83,6 @@ export default function RecordPage() {
             });
             let player = loadPlayer(); // ローカルデータ読み込み
             player = addExp(player, category); // カテゴリに応じたXP加算
-            player = completeDailyChallenge(player, 'record'); // デイリーチャレンジ更新
             savePlayer(player); // ローカルへ保存
             showStatus(player); // コンソール出力
 

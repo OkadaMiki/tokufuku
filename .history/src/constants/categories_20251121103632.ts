@@ -143,7 +143,6 @@ export const GOOD_CATEGORIES = [
   },
 ] as const;
 
-
 // ===== 型（配列から自動抽出）=====
 
 export type TokuParent = (typeof TOKU_CATEGORIES)[number];
@@ -152,15 +151,15 @@ export type GoodParent = (typeof GOOD_CATEGORIES)[number];
 export type CategoryParent = TokuParent | GoodParent;
 export type ParentKey = CategoryParent['key'];
 
-export type TokuChild = TokuParent['children'][number];
-export type GoodChild = GoodParent['children'][number];
+export type TokuChild = TokuParent extends { children: readonly infer A } ? A[number] : never;
+export type GoodChild = GoodParent extends { children: readonly infer A } ? A[number] : never;
 export type CategoryChild = TokuChild | GoodChild;
 export type ChildKey = CategoryChild['key'];
 
 // ===== 便利ユーティリティ =====
 
-export const TOKU_PARENT_BY_KEY = new Map<string, TokuParent>(TOKU_CATEGORIES.map((p) => [p.key, p]));
-export const GOOD_PARENT_BY_KEY = new Map<string, GoodParent>(GOOD_CATEGORIES.map((p) => [p.key, p]));
+export const TOKU_PARENT_BY_KEY = new Map(TOKU_CATEGORIES.map((p) => [p.key, p] as const));
+export const GOOD_PARENT_BY_KEY = new Map(GOOD_CATEGORIES.map((p) => [p.key, p] as const));
 
 export function getChildrenFrom(parentKey: ParentKey) {
   return TOKU_PARENT_BY_KEY.get(parentKey)?.children

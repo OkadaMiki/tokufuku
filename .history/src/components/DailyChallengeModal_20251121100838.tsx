@@ -3,7 +3,11 @@
 import { useMemo } from "react";
 import styles from "./DailyChallengeModal.module.css";
 
-import { DailyChallengeState, ChallengeId } from "@/lib/playerData";
+type ChallengeId = "feed" | "uranai" | "record";
+
+export type DailyChallengeState = {
+    completed: Partial<Record<ChallengeId, boolean>>;
+};
 
 type Props = {
     open: boolean;

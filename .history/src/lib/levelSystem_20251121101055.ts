@@ -1,13 +1,13 @@
 // src/lib/levelSystem.ts
-import { TOKU_CATEGORIES, GOOD_CATEGORIES } from "@/constants/categories";
+import { TOKU_TREE, GOOD_TREE } from "@/constants/categories";
 import type { PlayerData, ChallengeId } from "@/lib/playerData";
 
 // 全カテゴリを統合
-const allCategories = [...TOKU_CATEGORIES, ...GOOD_CATEGORIES];
+const allCategories = [...TOKU_TREE, ...GOOD_TREE];
 
 // カテゴリ名から対応する経験値量を取得
 export const getCategoryExp = (categoryName: string): number | null => {
-  const found = allCategories.find((c) => c.label === categoryName);
+  const found = allCategories.find((c) => c.key === categoryName);
   return found?.exp ?? null;
 };
 

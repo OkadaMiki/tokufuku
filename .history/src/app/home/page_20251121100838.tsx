@@ -48,7 +48,7 @@ export default function HomePage() {
                     onGoFeed={() => {/* ご飯画面へ */ }}
                     onGoUranai={() => {/* おみくじ画面へ */ }}
                     onGoRecord={() => router.push('/record')}
-                    state={player.dailyChallenge}
+                    state={{ completed: { feed: false, uranai: true, record: false } }}
                 />
                 <PrimaryButton
                     text="ログアウト"
