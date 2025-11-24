@@ -1,10 +1,17 @@
-// src/constants/categories.ts
-
-// 子カテゴリ側の「その他」を判定するためのラベル（表示テキストそのまま）
-export const OTHER_CHILD_LABEL = "その他" as const;
-
 // とくつみ（徳）カテゴリ
-export const TOKU_CATEGORIES = [
+type Category = {
+  key: string,
+  label: string,
+  exp: number,
+  children: CategoryChild[]
+}
+
+type CategoryChild = {
+  key: string,
+  label: string
+}
+
+export const TOKU_CATEGORIES: Category[] = [
   {
     key: "toku_01",
     label: "思いやり系",
@@ -74,7 +81,7 @@ export const TOKU_CATEGORIES = [
 ] as const;
 
 // いいことカテゴリ
-export const GOOD_CATEGORIES = [
+export const GOOD_CATEGORIES: Category[] = [
   {
     key: "good_01",
     label: "ラッキー・流れが良かった系",
@@ -126,7 +133,7 @@ export const GOOD_CATEGORIES = [
     children: [
       { key: "good_05_01", label: "悩みが軽くなった" },
       { key: "good_05_02", label: "前向きになれた" },
-      { key: "good_05_03", label: "test" },
+      { key: "good_05_03", label: "自分を許せた" },
       { key: "good_05_other", label: "その他" },
     ],
   },
@@ -143,39 +150,6 @@ export const GOOD_CATEGORIES = [
   },
 ] as const;
 
-// ===== 型（配列から自動抽出）=====
-
-export type TokuParent = (typeof TOKU_CATEGORIES)[number];
-export type GoodParent = (typeof GOOD_CATEGORIES)[number];
-
-export type CategoryParent = TokuParent | GoodParent;
-export type ParentKey = CategoryParent["key"];
-
-export type TokuChild = TokuParent["children"][number];
-export type GoodChild = GoodParent["children"][number];
-export type CategoryChild = TokuChild | GoodChild;
-export type ChildKey = CategoryChild["key"];
-
-// ===== 便利ユーティリティ =====
-
-export const TOKU_PARENT_BY_KEY = new Map<string, TokuParent>(
-  TOKU_CATEGORIES.map((p) => [p.key, p]),
-);
-export const GOOD_PARENT_BY_KEY = new Map<string, GoodParent>(
-  GOOD_CATEGORIES.map((p) => [p.key, p]),
-);
-
-export function getChildrenFrom(parentKey: ParentKey) {
-  return (
-    TOKU_PARENT_BY_KEY.get(parentKey)?.children ??
-    GOOD_PARENT_BY_KEY.get(parentKey)?.children ??
-    []
-  );
-}
-
-export function isOtherChildLabel(label: string) {
-  return label === OTHER_CHILD_LABEL;
-}
 
 export const DAILY_CHALLENGE_EXP: Record<string, number> = {
   feed: 50,
