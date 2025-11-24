@@ -1,83 +1,123 @@
-.wrapper {
-  display: grid;
-  gap: 8px;
-}
-.headerRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.title {
-  font-size: 16px;
-  font-weight: 600;
-}
-.arrowGroup {
-  display: flex;
-  gap: 8px;
-}
-.arrowBtn {
-  padding: 4px 8px;
-  font-size: 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: #fff;
-  cursor: pointer;
-}
-.arrowBtn[disabled] {
-  opacity: 0.4;
-  cursor: not-allowed;
+/* src/components/CategorySwiper.module.css */
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
 }
 
-.track {
-  position: relative;
-  width: 100%;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-}
-.trackInner {
+.panes {
   display: flex;
-  width: 100%;
+  width: 200%;
+  transition: transform 240ms ease;
+  will-change: transform;
+  touch-action: pan-y;
 }
-.slide {
-  scroll-snap-align: start;
-  flex: 0 0 100%;
-  padding-inline: 8px;
-}
-.slidePanel {
-  background: #f3f4f6; /* gray-100 */
-  border-radius: 16px;
+
+.pane {
+  flex: 0 0 50%;
   padding: 12px;
 }
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.subBtn {
-  text-align: left;
+
+/* 親「その他」を2列ぶち抜きにしたい時に使う */
+.full {
+  grid-column: 1 / -1;
+}
+
+.parents {
+  /* 必要なら親グリッド専用の余白などここに */
+}
+
+.chip {
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #8d8d8d;
+  color: #ffffff;
   font-size: 14px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: #fff;
-  border: 1px solid #d1d5db;
+  font-weight: 700;
+  line-height: 1.2;
   cursor: pointer;
 }
-.subBtn:hover {
-  background: #f9fafb;
+
+.childChip {
+  height: 64px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.3;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.chipActive {
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #5c5c5c;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.childHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.backBtn {
+  appearance: none;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111111;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.parentTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #222222;
 }
 
 .dots {
   display: flex;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 10px;
 }
+
 .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #d1d5db;
+  width: 6px;
+  height: 6px;
+  background: #cccccc;
+  border-radius: 9999px;
 }
+
 .dotActive {
-  background: #111827;
+  width: 6px;
+  height: 6px;
+  background: #666666;
+  border-radius: 9999px;
 }

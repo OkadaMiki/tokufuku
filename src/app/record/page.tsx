@@ -2,10 +2,7 @@
 
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import CategorySwiper from "@/components/CategorySwiper";
-import Footer from "@/components/FooterNav";
-import LoadingMessage from "@/components/LoadingMessage";
+import { useMemo, useState, useRef } from "react";
 import { GOOD_CATEGORIES, TOKU_CATEGORIES } from "@/constants/categories";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth, db } from "@/lib/firebase";
@@ -16,6 +13,9 @@ import {
   loadPlayer,
   savePlayer,
 } from "@/lib/levelSystem";
+import CategorySwiper from "@/components/CategorySwiper";
+import Footer from "@/components/FooterNav";
+import LoadingMessage from "@/components/LoadingMessage";
 import styles from "./page.module.css";
 
 const POINTS = { toku: 10, good: 6 } as const;
@@ -58,6 +58,9 @@ export default function RecordPage() {
     () => (type === "toku" ? TOKU_CATEGORIES : GOOD_CATEGORIES),
     [type],
   );
+  // 「その他」選択時にここへフォーカス
+  const memoRef = useRef<HTMLTextAreaElement | null>(null);
+
   if (loading) return <LoadingMessage />;
 
   const canSubmit = !!(type && dateStr && (sub || category));
@@ -110,7 +113,6 @@ export default function RecordPage() {
     <div className={styles.page}>
       {/* ヘッダ */}
       <header className={styles.header}>
-        {/* <h1 className={styles.title}>{type === "toku" ? "とくつみ記録" : "いいこと記録"}</h1> */}
         <div className={styles.typeSwitch}>
           <button
             type="button"
@@ -154,9 +156,9 @@ export default function RecordPage() {
 
       {/* カテゴリ → 横スワイプでサブ選択 */}
       <section className={styles.panel}>
-        <CategorySwiper data={tree as any} onPick={handlePick} />
+        <CategorySwiper parents={tree as any} onPick={handlePick} memoRef={memoRef} />
         <p className={styles.hint}>
-          選択：{category || "—"} {sub ? `> ${sub}` : ""}
+          選択中：{category || "—"} {sub ? `> ${sub}` : ""}
         </p>
       </section>
 
@@ -172,6 +174,7 @@ export default function RecordPage() {
           onChange={(e) => setMemo(e.target.value)}
           className={styles.textarea}
           placeholder="自由入力"
+          ref={memoRef}
         />
       </section>
 
