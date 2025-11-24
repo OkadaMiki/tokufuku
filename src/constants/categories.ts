@@ -3,7 +3,7 @@ type Category = {
   key: string,
   label: string,
   exp: number,
-  children: CategoryChild[]
+  children?: CategoryChild[]
 }
 
 type CategoryChild = {
@@ -78,6 +78,11 @@ export const TOKU_CATEGORIES: Category[] = [
       { key: "toku_06_other", label: "その他" },
     ],
   },
+  {
+    key: "toku_07",
+    label: "その他",
+    exp: 30
+  },
 ] as const;
 
 // いいことカテゴリ
@@ -147,6 +152,11 @@ export const GOOD_CATEGORIES: Category[] = [
       { key: "good_06_03", label: "うまくいく流れに乗れた" },
       { key: "good_06_other", label: "その他" },
     ],
+  },
+  {
+    key: "good_07",
+    label: "その他",
+    exp: 20
   },
 ] as const;
 
