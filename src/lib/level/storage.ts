@@ -49,3 +49,50 @@ export const loadPlayer = (): PlayerData => {
     return { name: "プレイヤー", level: 1, exp: 0, totalExp: 0 };
   }
 };
+
+// バッファ（アニメーション用）を保存
+export const saveBuffer = (player: PlayerData): void => {
+  try {
+    localStorage.setItem("player_buffer", JSON.stringify(player));
+    // console.log("📦 Buffer saved:", player);
+  } catch (err) {
+    console.error("❌ Failed to save buffer:", err);
+  }
+};
+
+// バッファを読み込み
+export const loadBuffer = (): PlayerData | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("player_buffer");
+    if (!raw) return null;
+    return JSON.parse(raw) as PlayerData;
+  } catch (err) {
+    return null;
+  }
+};
+
+// バッファを削除（同期完了後など）
+export const clearBuffer = (): void => {
+  try {
+    localStorage.removeItem("player_buffer");
+  } catch (err) {
+    console.error("Failed to clear buffer:", err);
+  }
+};
+
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
+// Firestoreにプレイヤーデータを保存 (Data A)
+export const savePlayerToFirestore = async (uid: string, player: PlayerData): Promise<void> => {
+  try {
+    const userRef = doc(db, "users", uid);
+    // 必要なデータだけ抽出して保存（またはそのまま保存）
+    // ここでは player オブジェクト全体をマージ保存します
+    await setDoc(userRef, { ...player }, { merge: true });
+    // console.log("🔥 Player saved to Firestore:", player);
+  } catch (err) {
+    console.error("❌ Failed to save player to Firestore:", err);
+  }
+};

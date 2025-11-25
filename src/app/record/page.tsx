@@ -12,6 +12,9 @@ import {
   getRequiredExp,
   loadPlayer,
   savePlayer,
+  savePlayerToFirestore,
+  loadBuffer,
+  saveBuffer,
 } from "@/lib/levelSystem";
 import CategorySwiper from "@/components/CategorySwiper";
 import Footer from "@/components/FooterNav";
@@ -93,9 +96,24 @@ export default function RecordPage() {
         createdAt: serverTimestamp(),
       });
       let player = loadPlayer(); // ローカルデータ読み込み
+
+      // ★ バッファ保存ロジック (Data B)
+      // まだバッファがない場合のみ、現在の状態（加算前）を保存する
+      // これにより、Homeに戻ったときに「加算前 -> 加算後」のアニメーションが可能になる
+      const existingBuffer = loadBuffer();
+      if (!existingBuffer) {
+        saveBuffer(player);
+      }
+
       player = addExp(player, category); // カテゴリに応じたXP加算
       player = completeDailyChallenge(player, "record"); // デイリーチャレンジ更新
-      savePlayer(player); // ローカルへ保存
+      savePlayer(player); // ローカルへ保存 (Data A)
+
+      // Firestoreへも保存 (Data A)
+      if (user?.uid) {
+        await savePlayerToFirestore(user.uid, player);
+      }
+
       showStatus(player); // コンソール出力
 
       setMsg(`保存しました！ +${category}で経験値獲得`);
