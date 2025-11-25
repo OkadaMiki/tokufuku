@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ユーザードキュメント: 自分のドキュメントのみ読み書き可能
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // ユーザーのレコードサブコレクション: 自分のレコードのみ読み書き可能
+      match /records/{recordId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+    
+    // デフォルト: すべて拒否
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
