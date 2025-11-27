@@ -38,8 +38,13 @@
 }
 
 .chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 10px 14px;
+  min-height: 40px;
+  /* 高めに固定 */
+  padding: 8px;
   border: none;
   border-radius: 20px;
   background: #8d8d8d;
@@ -47,12 +52,13 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
-  cursor: pointer;
+  text-align: center;
+  word-break: keep-all;
 }
 
 .childChip {
   height: 64px;
-  padding: 0 14px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,8 +69,12 @@
 }
 
 .chipActive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 10px 14px;
+  min-height: 40px;
+  padding: 8px;
   border: none;
   border-radius: 20px;
   background: #5c5c5c;
@@ -72,7 +82,8 @@
   font-size: 14px;
   font-weight: 800;
   line-height: 1.2;
-  cursor: pointer;
+  text-align: center;
+  word-break: keep-all;
 }
 
 .childHeader {

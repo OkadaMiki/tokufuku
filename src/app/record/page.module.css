@@ -2,7 +2,7 @@
   width: 100%;
   display: grid;
   gap: 12px;
-  padding: 16px;
+  padding: 64px 16px 16px 16px;
 }
 
 .header {

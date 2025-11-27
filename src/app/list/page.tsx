@@ -15,7 +15,7 @@ import Footer from "@/components/FooterNav";
 import LoadingMessage from "@/components/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { db } from "@/lib/firebase";
-import styles from "./list.module.css";
+import styles from "./page.module.css";
 
 type RecordItem = {
   id: string;
@@ -98,9 +98,8 @@ export default function RecordListPage() {
               <div className={styles.cardHeader}>
                 <span className={styles.date}>{dateStr}</span>
                 <span
-                  className={`${styles.typeBadge} ${
-                    r.type === "toku" ? styles.typeToku : styles.typeGood
-                  }`}
+                  className={`${styles.typeBadge} ${r.type === "toku" ? styles.typeToku : styles.typeGood
+                    }`}
                 >
                   {r.type === "toku" ? "🌿 徳" : "✨ いいこと"}
                 </span>
