@@ -1,4 +1,5 @@
 import { getRemainingExp, getRequiredExp } from "@/lib/levelSystem";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import type { PlayerData } from "@/lib/playerData";
 import styles from "./LevelGauge.module.css";
 
@@ -15,6 +16,9 @@ export default function LevelGauge({ player }: Props) {
   const remain = getRemainingExp(player);
   const percent = Math.round((value / max) * 100);
   const clampedNow = Math.max(0, Math.min(value, max));
+  const { user } = useAuthGuard({ requireLogin: true });
+
+
 
   return (
     <div className={styles.levelGauge}>
@@ -27,7 +31,7 @@ export default function LevelGauge({ player }: Props) {
           <span className={styles.levelNum}>{level}</span>
         </div>
         <h2 className={styles.name} title={name}>
-          {name}
+          {user?.username}
         </h2>
       </div>
 
@@ -46,7 +50,7 @@ export default function LevelGauge({ player }: Props) {
       </div>
 
       <p className={styles.caption}>
-        あと
+        次のレベルまで あと
         <strong className={styles.pointNum}>{remain.toLocaleString()}</strong>
         ポイント
       </p>

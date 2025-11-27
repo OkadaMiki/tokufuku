@@ -32,13 +32,27 @@ body {
 
 .siteShell {
   min-height: 100dvh;
-  padding: var(--gutter);
 }
 
-/* iPhoneのノッチ等に配慮（対応環境のみ） */
+.siteContent {
+  padding: 48px var(--gutter) var(--gutter) var(--gutter);
+}
+
+/* 背景をデザイン通りに見せたいページのためのフラグ */
+.siteShell--bleed .siteContent {
+  padding: 0;
+}
+
+/* iOS のくぼみ対策（必要なら） */
 @supports (padding: max(0px)) {
-  .siteShell {
+  .siteContent {
     padding-left: max(var(--gutter), env(safe-area-inset-left));
     padding-right: max(var(--gutter), env(safe-area-inset-right));
+    padding-top: max(var(--gutter), env(safe-area-inset-top));
+    padding-bottom: max(var(--gutter), env(safe-area-inset-bottom));
+  }
+
+  .siteShell--bleed .siteContent {
+    padding: 0;
   }
 }

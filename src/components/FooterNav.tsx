@@ -9,7 +9,7 @@ export default function Footer() {
       <Link href="/record" className={styles.box}></Link>
       <Link href="/home" className={styles.box}></Link>
       <Link href="#" className={styles.box}></Link>
-      <Link href="#" className={styles.box}></Link>
+      <Link href="/user" className={styles.box}></Link>
     </footer>
   );
 }

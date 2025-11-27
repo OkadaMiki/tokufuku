@@ -15,11 +15,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: { children: React.ReactNode }) {
   return (
     <html lang="ja">
       <body className={zenMaru.className}>
-        <div className="siteShell">{children}</div>
+        <div className="siteShell">
+          {children}
+        </div>
       </body>
     </html>
   );

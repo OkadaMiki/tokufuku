@@ -1,13 +1,15 @@
 "use client";
 
-import { signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
 import DailyChallengeModal from "@/components/DailyChallengeModal";
+import HomeScene from '@/components/HomeScene';
 import FooterNav from "@/components/FooterNav";
 import LevelGauge from "@/components/LevelGauge";
 import LoadingMessage from "@/components/LoadingMessage";
 import PrimaryButton from "@/components/PrimaryButton";
+import styles from "./page.module.css";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth } from "@/lib/firebase";
 import {
@@ -17,9 +19,12 @@ import {
   getRequiredExp,
 } from "@/lib/levelSystem";
 import type { PlayerData } from "@/lib/playerData";
-import styles from "./page.module.css";
+
 
 export default function HomePage() {
+  const wall = '/assets/walls/default_wall.jpg';
+  const floor = '/assets/floors/default_floor.jpg';
+
   const router = useRouter();
   const { user, loading } = useAuthGuard({ requireLogin: true });
   const [open, setOpen] = useState(false);
@@ -28,7 +33,7 @@ export default function HomePage() {
   const [displayPlayer, setDisplayPlayer] = useState<PlayerData | null>(null);
 
   // アニメーション制御用
-  const requestRef = useRef<number>();
+  const requestRef = useRef<number>(null);
 
   useEffect(() => {
     // 初期ロード
@@ -108,34 +113,35 @@ export default function HomePage() {
   };
 
   return (
-    <div className={styles.page}>
-      <div className={styles.stack}>
-        <LevelGauge player={displayPlayer} />
+    <>
+      <HomeScene wallUrl={wall} floorUrl={floor} floorHeightPct={210}>
+        <div className={styles.page}>
+          <div className={styles.stack}>
+            <LevelGauge player={displayPlayer} />
 
-        <p className={styles.greeting}>こんにちは、{user?.username} さん</p>
-
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className={styles.primaryButton}
-        >
-          まいにちチャレンジを開く
-        </button>
-        <DailyChallengeModal
-          open={open}
-          onClose={() => setOpen(false)}
-          onGoFeed={() => {
-            /* ご飯画面へ */
-          }}
-          onGoUranai={() => {
-            /* おみくじ画面へ */
-          }}
-          onGoRecord={() => router.push("/record")}
-          state={displayPlayer.dailyChallenge}
-        />
-        <PrimaryButton text="ログアウト" onClick={handleLogout} color="red" />
-      </div>
-      <FooterNav />
-    </div>
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className={`${styles.primaryButton} ${styles.openChallenge}`}
+            >
+              チャレンジへ
+            </button>
+            <DailyChallengeModal
+              open={open}
+              onClose={() => setOpen(false)}
+              onGoFeed={() => {
+                /* ご飯画面へ */
+              }}
+              onGoUranai={() => {
+                /* おみくじ画面へ */
+              }}
+              onGoRecord={() => router.push("/record")}
+              state={displayPlayer.dailyChallenge}
+            />
+          </div>
+          <FooterNav />
+        </div>
+      </HomeScene >
+    </>
   );
 }
