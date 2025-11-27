@@ -8,7 +8,7 @@ export default function Footer() {
       <Link href="/list" className={styles.box}></Link>
       <Link href="/record" className={styles.box}></Link>
       <Link href="/home" className={styles.box}></Link>
-      <Link href="#" className={styles.box}></Link>
+      <Link href="/character" className={styles.box}></Link>
       <Link href="/user" className={styles.box}></Link>
     </footer>
   );
