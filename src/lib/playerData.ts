@@ -12,4 +12,11 @@ export type PlayerData = {
   totalExp: number; // 総経験値
   dailyChallenge?: DailyChallengeState; // まいにちチャレンジ状態
   lastLoginDate?: string; // 最終ログイン日時 (ISO string)
+  fortune?: FortuneState;
+};
+
+export type FortuneState = {
+  lastFortuneDate: string; // 営業日基準 (e.g. "Mon Nov 21 2025")
+  categoryLabel: string;
+  categoryKey: string;
 };

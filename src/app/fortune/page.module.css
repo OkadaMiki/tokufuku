@@ -1,0 +1,70 @@
+.page {
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f9f9f9;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.cardContainer {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.card {
+  width: 80px;
+  height: 120px;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.result {
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.resultTitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.categoryName {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #e91e63;
+  margin-bottom: 1rem;
+}
+
+.bonusText {
+  color: #ff9800;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

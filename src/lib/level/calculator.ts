@@ -1,5 +1,6 @@
 import { GOOD_CATEGORIES, TOKU_CATEGORIES } from "@/constants/categories";
 import type { PlayerData } from "@/lib/playerData";
+import { getBusinessDate } from "./dateUtils";
 import { savePlayer } from "./storage";
 
 // 全カテゴリを統合
@@ -49,11 +50,36 @@ export const getExpRate = (player: PlayerData): number => {
 
 // 経験値加算＆レベルアップ判定（修正版）
 export const addExp = (player: PlayerData, category: string): PlayerData => {
-  const gain = getCategoryExp(category);
+  let gain = getCategoryExp(category);
 
   if (gain == null) {
     console.warn(`⚠️ 未定義カテゴリ '${category}' です。XP加算をスキップ`);
     return player;
+  }
+
+  // 占いボーナス判定 (2倍)
+  // 営業日が一致 かつ カテゴリラベルが一致
+  const businessDate = getBusinessDate(new Date());
+  
+  // Debug log
+  if (player.fortune) {
+    console.log("🔮 Fortune Debug:", {
+      currentDate: businessDate,
+      fortuneDate: player.fortune.lastFortuneDate,
+      fortuneCategory: player.fortune.categoryLabel,
+      inputCategory: category,
+      matchDate: player.fortune.lastFortuneDate === businessDate,
+      matchCategory: player.fortune.categoryLabel === category
+    });
+  }
+
+  if (
+    player.fortune &&
+    player.fortune.lastFortuneDate === businessDate &&
+    player.fortune.categoryLabel === category
+  ) {
+    gain *= 2;
+    console.log(`🔮 Fortune Bonus Applied! (x2) -> +${gain}`);
   }
 
   const { level, exp, totalExp } = calculateExpUpdate(player, gain);

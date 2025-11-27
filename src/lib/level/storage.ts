@@ -31,6 +31,7 @@ export const loadPlayer = (): PlayerData => {
         totalExp: typeof parsed.totalExp === "number" ? parsed.totalExp : 0,
         dailyChallenge: parsed.dailyChallenge || { completed: {} },
         lastLoginDate: parsed.lastLoginDate,
+        fortune: parsed.fortune,
       };
     }
 
