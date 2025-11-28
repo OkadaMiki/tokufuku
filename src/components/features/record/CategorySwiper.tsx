@@ -1,8 +1,8 @@
 // src/components/CategorySwiper.tsx
-'use client';
+"use client";
 
-import { useMemo, useRef, useState } from 'react';
-import styles from './CategorySwiper.module.css';
+import { useMemo, useRef, useState } from "react";
+import styles from "./CategorySwiper.module.css";
 
 type Child = { key: string; label: string };
 type Parent = { key: string; label: string; children?: readonly Child[] };
@@ -13,17 +13,20 @@ type Props = {
   onPick: (categoryLabel: string, subLabel: string) => void;
   // 備考欄へフォーカス（RefObject/MutableRefObject のいずれも可）
   memoRef?:
-  | React.RefObject<HTMLTextAreaElement | null>
-  | React.MutableRefObject<HTMLTextAreaElement | null>;
+    | React.RefObject<HTMLTextAreaElement | null>
+    | React.MutableRefObject<HTMLTextAreaElement | null>;
 };
 
-const OTHER_LABEL = 'その他';
+const OTHER_LABEL = "その他";
 
 export default function CategorySwiper({ parents, onPick, memoRef }: Props) {
   // 0: 親一覧, 1: 子一覧
   const [paneIndex, setPaneIndex] = useState<0 | 1>(0);
   const [activeParent, setActiveParent] = useState<Parent | null>(null);
-  const [selected, setSelected] = useState<{ parentKey?: string; childKey?: string }>({});
+  const [selected, setSelected] = useState<{
+    parentKey?: string;
+    childKey?: string;
+  }>({});
 
   // ドラッグ（スワイプ）制御
   const panesRef = useRef<HTMLDivElement>(null);
@@ -43,7 +46,7 @@ export default function CategorySwiper({ parents, onPick, memoRef }: Props) {
     el.focus();
     requestAnimationFrame(() => {
       el.focus();
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
     });
   };
 
@@ -130,7 +133,8 @@ export default function CategorySwiper({ parents, onPick, memoRef }: Props) {
         <section className={styles.pane} aria-label="親カテゴリ">
           <ul className={`${styles.grid} ${styles.parents}`}>
             {parents.map((p) => {
-              const isActive = selected.parentKey === p.key || activeParent?.key === p.key;
+              const isActive =
+                selected.parentKey === p.key || activeParent?.key === p.key;
               const wide = p.label === "その他"; // ← 親“その他”だけ横幅フル
               return (
                 <li key={p.key} className={wide ? styles.full : undefined}>
@@ -163,13 +167,14 @@ export default function CategorySwiper({ parents, onPick, memoRef }: Props) {
             >
               ← 戻る
             </button>
-            <h3 className={styles.parentTitle}>{activeParent?.label ?? ''}</h3>
+            <h3 className={styles.parentTitle}>{activeParent?.label ?? ""}</h3>
           </div>
 
           <ul className={styles.grid}>
             {children.map((c) => {
               const isActive =
-                selected.parentKey === activeParent?.key && selected.childKey === c.key;
+                selected.parentKey === activeParent?.key &&
+                selected.childKey === c.key;
               return (
                 <li key={c.key}>
                   <button

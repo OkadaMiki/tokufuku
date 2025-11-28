@@ -1,14 +1,14 @@
 export type CategoryChild = {
-  readonly key: string,
-  readonly label: string
-}
+  readonly key: string;
+  readonly label: string;
+};
 
 export type Category = {
-  readonly key: string,
-  readonly label: string,
-  readonly exp: number,
-  readonly children?: readonly CategoryChild[]
-}
+  readonly key: string;
+  readonly label: string;
+  readonly exp: number;
+  readonly children?: readonly CategoryChild[];
+};
 
 // 子カテゴリ側の「その他」判定で使う表示ラベル
 export const OTHER_CHILD_LABEL = "その他" as const;
@@ -84,7 +84,7 @@ export const TOKU_CATEGORIES: Category[] = [
   {
     key: "toku_07",
     label: OTHER_CHILD_LABEL,
-    exp: 30
+    exp: 30,
   },
 ];
 
@@ -159,10 +159,9 @@ export const GOOD_CATEGORIES: Category[] = [
   {
     key: "good_07",
     label: OTHER_CHILD_LABEL,
-    exp: 20
+    exp: 20,
   },
 ];
-
 
 export const DAILY_CHALLENGE_EXP: Record<string, number> = {
   feed: 50,

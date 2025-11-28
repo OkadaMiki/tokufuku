@@ -60,7 +60,7 @@ export const addExp = (player: PlayerData, category: string): PlayerData => {
   // 占いボーナス判定 (2倍)
   // 営業日が一致 かつ カテゴリラベルが一致
   const businessDate = getBusinessDate(new Date());
-  
+
   // Debug log
   if (player.fortune) {
     console.log("🔮 Fortune Debug:", {
@@ -69,7 +69,7 @@ export const addExp = (player: PlayerData, category: string): PlayerData => {
       fortuneCategory: player.fortune.categoryLabel,
       inputCategory: category,
       matchDate: player.fortune.lastFortuneDate === businessDate,
-      matchCategory: player.fortune.categoryLabel === category
+      matchCategory: player.fortune.categoryLabel === category,
     });
   }
 

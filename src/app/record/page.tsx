@@ -2,7 +2,10 @@
 
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
+import CategorySwiper from "@/components/features/record/CategorySwiper";
+import Footer from "@/components/layout/FooterNav";
+import LoadingMessage from "@/components/ui/LoadingMessage";
 import { GOOD_CATEGORIES, TOKU_CATEGORIES } from "@/constants/categories";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth, db } from "@/lib/firebase";
@@ -10,15 +13,12 @@ import {
   addExp,
   completeDailyChallenge,
   getRequiredExp,
+  loadBuffer,
   loadPlayer,
+  saveBuffer,
   savePlayer,
   savePlayerToFirestore,
-  loadBuffer,
-  saveBuffer,
-} from "@/lib/levelSystem";
-import CategorySwiper from "@/components/CategorySwiper";
-import Footer from "@/components/FooterNav";
-import LoadingMessage from "@/components/LoadingMessage";
+} from "@/lib/level";
 import styles from "./page.module.css";
 
 const POINTS = { toku: 10, good: 6 } as const;
@@ -50,7 +50,7 @@ export default function RecordPage() {
   const [category, setCategory] = useState(""); // 大カテゴリ
   const [sub, setSub] = useState(""); // サブカテゴリ
   const [memo, setMemo] = useState("");
-  const [content, setContent] = useState<string>(""); // 任意メモ
+  // const [content, setContent] = useState<string>(""); // 任意メモ
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -79,7 +79,7 @@ export default function RecordPage() {
     setMsg("");
     try {
       const occurred = new Date(dateStr);
-      const currentUser = auth.currentUser || user;
+      // const currentUser = auth.currentUser || user;
       if (!user) {
         setMsg("ログイン状態を確認してください");
         setSaving(false);
@@ -174,7 +174,11 @@ export default function RecordPage() {
 
       {/* カテゴリ → 横スワイプでサブ選択 */}
       <section className={styles.panel}>
-        <CategorySwiper parents={tree as any} onPick={handlePick} memoRef={memoRef} />
+        <CategorySwiper
+          parents={tree as any}
+          onPick={handlePick}
+          memoRef={memoRef}
+        />
         <p className={styles.hint}>
           選択中：{category || "—"} {sub ? `> ${sub}` : ""}
         </p>

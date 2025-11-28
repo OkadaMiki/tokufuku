@@ -68,7 +68,7 @@ export const loadBuffer = (): PlayerData | null => {
     const raw = localStorage.getItem("player_buffer");
     if (!raw) return null;
     return JSON.parse(raw) as PlayerData;
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 };
@@ -86,7 +86,10 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 // Firestoreにプレイヤーデータを保存 (Data A)
-export const savePlayerToFirestore = async (uid: string, player: PlayerData): Promise<void> => {
+export const savePlayerToFirestore = async (
+  uid: string,
+  player: PlayerData,
+): Promise<void> => {
   try {
     const userRef = doc(db, "users", uid);
     // 必要なデータだけ抽出して保存（またはそのまま保存）

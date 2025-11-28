@@ -3,9 +3,9 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import AuthInput from "@/components/AuthInput";
-import LoadingMessage from "@/components/LoadingMessage";
-import PrimaryButton from "@/components/PrimaryButton";
+import AuthInput from "@/components/ui/AuthInput";
+import LoadingMessage from "@/components/ui/LoadingMessage";
+import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth } from "@/lib/firebase";
 
@@ -28,7 +28,7 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/home");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       setError("ログインに失敗しました");
     } finally {

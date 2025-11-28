@@ -10,9 +10,9 @@ import {
 } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Footer from "@/components/FooterNav";
+import Footer from "@/components/layout/FooterNav";
 
-import LoadingMessage from "@/components/LoadingMessage";
+import LoadingMessage from "@/components/ui/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { db } from "@/lib/firebase";
 import styles from "./page.module.css";
@@ -98,8 +98,9 @@ export default function RecordListPage() {
               <div className={styles.cardHeader}>
                 <span className={styles.date}>{dateStr}</span>
                 <span
-                  className={`${styles.typeBadge} ${r.type === "toku" ? styles.typeToku : styles.typeGood
-                    }`}
+                  className={`${styles.typeBadge} ${
+                    r.type === "toku" ? styles.typeToku : styles.typeGood
+                  }`}
                 >
                   {r.type === "toku" ? "🌿 徳" : "✨ いいこと"}
                 </span>

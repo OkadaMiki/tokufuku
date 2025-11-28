@@ -1,5 +1,5 @@
-import { getRemainingExp, getRequiredExp } from "@/lib/levelSystem";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { getRemainingExp, getRequiredExp } from "@/lib/level";
 import type { PlayerData } from "@/lib/playerData";
 import styles from "./LevelGauge.module.css";
 
@@ -8,6 +8,7 @@ type Props = {
 };
 
 export default function LevelGauge({ player }: Props) {
+  const { user } = useAuthGuard({ requireLogin: true });
   if (!player) return null;
   const level = player.level;
   const name = player.name;
@@ -16,9 +17,6 @@ export default function LevelGauge({ player }: Props) {
   const remain = getRemainingExp(player);
   const percent = Math.round((value / max) * 100);
   const clampedNow = Math.max(0, Math.min(value, max));
-  const { user } = useAuthGuard({ requireLogin: true });
-
-
 
   return (
     <div className={styles.levelGauge}>

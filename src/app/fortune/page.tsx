@@ -1,19 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GOOD_CATEGORIES, TOKU_CATEGORIES, Category } from "@/constants/categories";
+import Footer from "@/components/layout/FooterNav";
+import LoadingMessage from "@/components/ui/LoadingMessage";
+import { type Category, TOKU_CATEGORIES } from "@/constants/categories";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import {
   completeDailyChallenge,
   loadPlayer,
   savePlayer,
   savePlayerToFirestore,
-} from "@/lib/levelSystem";
+} from "@/lib/level";
 import { getBusinessDate } from "@/lib/level/dateUtils";
-import { PlayerData } from "@/lib/playerData";
-import { auth } from "@/lib/firebase";
-import Footer from "@/components/FooterNav";
-import LoadingMessage from "@/components/LoadingMessage";
+import type { PlayerData } from "@/lib/playerData";
 import styles from "./page.module.css";
 
 export default function FortunePage() {
@@ -30,7 +29,9 @@ export default function FortunePage() {
       const today = getBusinessDate(new Date());
       if (p.fortune && p.fortune.lastFortuneDate === today) {
         // Already drawn today
-        const found = TOKU_CATEGORIES.find((c) => c.key === p.fortune?.categoryKey);
+        const found = TOKU_CATEGORIES.find(
+          (c) => c.key === p.fortune?.categoryKey,
+        );
         if (found) {
           setFortuneCategory(found);
           setRevealed(true);
@@ -45,10 +46,11 @@ export default function FortunePage() {
     // Filter out "Other" categories
     // Filter out "Other" categories
     const validCategories = TOKU_CATEGORIES.filter(
-      (c) => !c.label.includes("その他") && !c.key.endsWith("other")
+      (c) => !c.label.includes("その他") && !c.key.endsWith("other"),
     );
 
-    const randomCat = validCategories[Math.floor(Math.random() * validCategories.length)];
+    const randomCat =
+      validCategories[Math.floor(Math.random() * validCategories.length)];
     const today = getBusinessDate(new Date());
 
     const updatedPlayer: PlayerData = {
@@ -81,16 +83,26 @@ export default function FortunePage() {
       {!revealed ? (
         <div className={styles.cardContainer}>
           {[1, 2, 3].map((i) => (
-            <div key={i} className={styles.card} onClick={handleDraw}>
+            <button
+              type="button"
+              key={i}
+              className={styles.card}
+              onClick={handleDraw}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleDraw();
+              }}
+            >
               ?
-            </div>
+            </button>
           ))}
         </div>
       ) : (
         <div className={styles.result}>
           <p className={styles.resultTitle}>今日のラッキーカテゴリ</p>
           <div className={styles.categoryName}>{fortuneCategory?.label}</div>
-          <p className={styles.bonusText}>このカテゴリで記録すると経験値2倍！</p>
+          <p className={styles.bonusText}>
+            このカテゴリで記録すると経験値2倍！
+          </p>
         </div>
       )}
 

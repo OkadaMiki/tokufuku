@@ -4,9 +4,9 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import AuthInput from "@/components/AuthInput";
-import LoadingMessage from "@/components/LoadingMessage";
-import PrimaryButton from "@/components/PrimaryButton";
+import AuthInput from "@/components/ui/AuthInput";
+import LoadingMessage from "@/components/ui/LoadingMessage";
+import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth, db } from "@/lib/firebase";
 
@@ -37,7 +37,7 @@ export default function SignupPage() {
         updatedAt: serverTimestamp(),
       });
       router.push("/home");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       setError("登録に失敗しました");
     } finally {

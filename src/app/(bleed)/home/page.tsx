@@ -1,29 +1,27 @@
 "use client";
 
-import DailyChallengeModal from "@/components/DailyChallengeModal";
-import HomeScene from '@/components/HomeScene';
-import FooterNav from "@/components/FooterNav";
-import LevelGauge from "@/components/LevelGauge";
-import LoadingMessage from "@/components/LoadingMessage";
-import PrimaryButton from "@/components/PrimaryButton";
-import styles from "./page.module.css";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import DailyChallengeModal from "@/components/features/daily-challenge/DailyChallengeModal";
+import HomeScene from "@/components/features/home/HomeScene";
+import LevelGauge from "@/components/features/home/LevelGauge";
+import FooterNav from "@/components/layout/FooterNav";
+import LoadingMessage from "@/components/ui/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth } from "@/lib/firebase";
 import {
-  loadPlayer,
-  loadBuffer,
   clearBuffer,
   getRequiredExp,
-} from "@/lib/levelSystem";
+  loadBuffer,
+  loadPlayer,
+} from "@/lib/level";
 import type { PlayerData } from "@/lib/playerData";
-
+import styles from "./page.module.css";
 
 export default function HomePage() {
-  const wall = '/assets/walls/default_wall.jpg';
-  const floor = '/assets/floors/default_floor.jpg';
+  const wall = "/assets/walls/default_wall.jpg";
+  const floor = "/assets/floors/default_floor.jpg";
 
   const router = useRouter();
   const { user, loading } = useAuthGuard({ requireLogin: true });
@@ -106,12 +104,6 @@ export default function HomePage() {
 
   if (loading || !displayPlayer) return <LoadingMessage />;
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    localStorage.removeItem("authUser");
-    router.push("/login");
-  };
-
   return (
     <>
       <HomeScene wallUrl={wall} floorUrl={floor} floorHeightPct={210}>
@@ -134,7 +126,7 @@ export default function HomePage() {
               }}
               onGoUranai={() => {
                 /* おみくじ画面へ */
-                router.push("/fortune")
+                router.push("/fortune");
               }}
               onGoRecord={() => router.push("/record")}
               state={displayPlayer.dailyChallenge}
@@ -142,7 +134,7 @@ export default function HomePage() {
           </div>
           <FooterNav />
         </div>
-      </HomeScene >
+      </HomeScene>
     </>
   );
 }

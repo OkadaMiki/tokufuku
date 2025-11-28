@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+
 import type { ChallengeId, DailyChallengeState } from "@/lib/playerData";
 import styles from "./DailyChallengeModal.module.css";
 
