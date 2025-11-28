@@ -20,38 +20,41 @@ export default function LevelGauge({ player }: Props) {
 
   return (
     <div className={styles.levelGauge}>
-      <div className={styles.nameTag}>
-        <div
-          className={styles.levelBadge}
-          role="img"
-          aria-label={`レベル ${level}`}
-        >
-          <span className={styles.levelNum}>{level}</span>
+      <div className={styles.levelGaugeInner}>
+
+        <div className={styles.nameTag}>
+          <div
+            className={styles.levelBadge}
+            role="img"
+            aria-label={`レベル ${level}`}
+          >
+            <span className={styles.levelNum}>{level}</span>
+          </div>
+          <h2 className={styles.name} title={name}>
+            {user?.username}
+          </h2>
         </div>
-        <h2 className={styles.name} title={name}>
-          {user?.username}
-        </h2>
-      </div>
 
-      <div
-        className={styles.progress}
-        role="progressbar"
-        aria-label="つぎのレベルアップまでの進捗"
-        aria-valuenow={clampedNow}
-        aria-valuemin={0}
-        aria-valuemax={max <= 0 ? 1 : max}
-      >
-        <span
-          className={styles.progressFill}
-          style={{ width: `${percent}%` }}
-        />
-      </div>
+        <div
+          className={styles.progress}
+          role="progressbar"
+          aria-label="つぎのレベルアップまでの進捗"
+          aria-valuenow={clampedNow}
+          aria-valuemin={0}
+          aria-valuemax={max <= 0 ? 1 : max}
+        >
+          <span
+            className={styles.progressFill}
+            style={{ width: `${percent}%` }}
+          />
+        </div>
 
-      <p className={styles.caption}>
-        次のレベルまで あと
-        <strong className={styles.pointNum}>{remain.toLocaleString()}</strong>
-        ポイント
-      </p>
+        <p className={styles.caption}>
+          次のレベルまで あと
+          <strong className={styles.pointNum}>{remain.toLocaleString()}</strong>
+          ポイント
+        </p>
+      </div>
     </div>
   );
 }
