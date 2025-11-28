@@ -1,4 +1,4 @@
-import type { PlayerData } from "@/lib/playerData";
+import { type PlayerData, validatePlayerData } from "@/lib/playerData";
 import { shouldResetDailyChallenge } from "./dateUtils";
 
 // プレイヤーデータを保存
@@ -8,6 +8,17 @@ export const savePlayer = (player: PlayerData): void => {
     console.log("✅ Player saved:", player);
   } catch (err) {
     console.error("❌ Failed to save player:", err);
+  }
+};
+
+// プレイヤーデータを削除 (ログアウト時や再同期前など)
+export const clearPlayer = (): void => {
+  try {
+    localStorage.removeItem("player");
+    localStorage.removeItem("player_buffer"); // バッファも削除
+    console.log("🗑️ Player data cleared from localStorage");
+  } catch (err) {
+    console.error("❌ Failed to clear player data:", err);
   }
 };
 
@@ -94,6 +105,10 @@ export const savePlayerToFirestore = async (
     const userRef = doc(db, "users", uid);
     // 必要なデータだけ抽出して保存（またはそのまま保存）
     // ここでは player オブジェクト全体をマージ保存します
+    if (!validatePlayerData(player)) {
+      console.error("❌ Invalid player data, skipping Firestore save:", player);
+      return;
+    }
     await setDoc(userRef, { ...player }, { merge: true });
     // console.log("🔥 Player saved to Firestore:", player);
   } catch (err) {
