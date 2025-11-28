@@ -134,6 +134,7 @@ export default function HomePage() {
               }}
               onGoUranai={() => {
                 /* おみくじ画面へ */
+                router.push("/fortune")
               }}
               onGoRecord={() => router.push("/record")}
               state={displayPlayer.dailyChallenge}
