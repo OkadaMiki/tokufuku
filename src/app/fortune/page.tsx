@@ -82,7 +82,7 @@ export default function FortunePage() {
 
       {!revealed ? (
         <div className={styles.cardContainer}>
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3,4,5,6].map((i) => (
             <button
               type="button"
               key={i}
@@ -92,7 +92,7 @@ export default function FortunePage() {
                 if (e.key === "Enter" || e.key === " ") handleDraw();
               }}
             >
-              ?
+              
             </button>
           ))}
         </div>

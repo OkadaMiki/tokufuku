@@ -20,3 +20,45 @@ export type FortuneState = {
   categoryLabel: string;
   categoryKey: string;
 };
+
+export function validatePlayerData(data: any): data is PlayerData {
+  if (typeof data !== "object" || data === null) return false;
+
+  // 必須プロパティの型チェック
+  if (typeof data.name !== "string") return false;
+  if (typeof data.level !== "number" || data.level < 1) return false;
+  if (typeof data.exp !== "number" || data.exp < 0) return false;
+  if (typeof data.totalExp !== "number" || data.totalExp < 0) return false;
+
+  // オプショナルプロパティのチェック (存在する場合のみ)
+  if (
+    data.lastLoginDate !== undefined &&
+    typeof data.lastLoginDate !== "string"
+  ) {
+    return false;
+  }
+
+  if (data.dailyChallenge !== undefined) {
+    if (
+      typeof data.dailyChallenge !== "object" ||
+      data.dailyChallenge === null ||
+      typeof data.dailyChallenge.completed !== "object"
+    ) {
+      return false;
+    }
+  }
+
+  if (data.fortune !== undefined) {
+    if (
+      typeof data.fortune !== "object" ||
+      data.fortune === null ||
+      typeof data.fortune.lastFortuneDate !== "string" ||
+      typeof data.fortune.categoryLabel !== "string" ||
+      typeof data.fortune.categoryKey !== "string"
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}

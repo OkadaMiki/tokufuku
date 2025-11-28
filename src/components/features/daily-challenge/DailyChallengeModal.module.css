@@ -3,7 +3,8 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.35),
+  #FFD2FD;
   display: grid;
   place-items: center;
 }

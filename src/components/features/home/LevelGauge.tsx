@@ -29,7 +29,7 @@ export default function LevelGauge({ player }: Props) {
           <span className={styles.levelNum}>{level}</span>
         </div>
         <h2 className={styles.name} title={name}>
-          {user?.username}
+          {user?.username}ちゃん
         </h2>
       </div>
 
