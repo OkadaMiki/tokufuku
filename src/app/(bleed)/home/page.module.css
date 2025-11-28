@@ -104,3 +104,12 @@
   height: 80px;
   border-radius: 40px;
 }
+
+.charSlot {
+  position: absolute;
+  left: 50%;
+  bottom: 150;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+}

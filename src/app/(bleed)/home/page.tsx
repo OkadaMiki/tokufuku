@@ -3,11 +3,6 @@
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import DailyChallengeModal from "@/components/features/daily-challenge/DailyChallengeModal";
-import HomeScene from "@/components/features/home/HomeScene";
-import LevelGauge from "@/components/features/home/LevelGauge";
-import FooterNav from "@/components/layout/FooterNav";
-import LoadingMessage from "@/components/ui/LoadingMessage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth } from "@/lib/firebase";
 import {
@@ -17,6 +12,12 @@ import {
   loadPlayer,
 } from "@/lib/level";
 import type { PlayerData } from "@/lib/playerData";
+import Image from 'next/image';
+import DailyChallengeModal from "@/components/features/daily-challenge/DailyChallengeModal";
+import HomeScene from "@/components/features/home/HomeScene";
+import LevelGauge from "@/components/features/home/LevelGauge";
+import FooterNav from "@/components/layout/FooterNav";
+import LoadingMessage from "@/components/ui/LoadingMessage";
 import styles from "./page.module.css";
 
 export default function HomePage() {
@@ -130,6 +131,15 @@ export default function HomePage() {
               }}
               onGoRecord={() => router.push("/record")}
               state={displayPlayer.dailyChallenge}
+            />
+          </div>
+          <div className={styles.charSlot}>
+            <Image
+              src="/assets/characters/baby/pink.svg"
+              alt="ピンクの小さなあかちゃんのいのち"
+              width={200}
+              height={180}
+              priority
             />
           </div>
           <FooterNav />
