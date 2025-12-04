@@ -3,7 +3,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase";
-import { clearPlayer, savePlayer } from "@/lib/level/storage";
+import { clearPlayer, savePlayer, syncPlayerData } from "@/lib/level/storage";
 import { validatePlayerData } from "@/lib/playerData";
 
 export function useAuthGuard({
@@ -39,31 +39,19 @@ export function useAuthGuard({
       if (u) {
         try {
           // ログイン時（初期ロード時）に一度ローカルをクリアして整合性を担保
-          // ※ 注意: これによりオフライン時の動作が制限される可能性があるが、
-          //   「DBから持ってくる」という要件を優先する。
+          // 新しいsyncPlayerData関数を使用してFirestoreと同期
           clearPlayer();
 
-          const userDocRef = doc(db, "users", u.uid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            setUser({
-              uid: u.uid,
-              email: u.email,
-              ...userDoc.data(),
-            });
-
-            // ローカルストレージと同期 (DBのデータが正なら上書き)
-            const data = userDoc.data();
-            if (validatePlayerData(data)) {
-              savePlayer(data);
-              console.log("🔄 Synced local player data with Firestore");
-            } else {
-              console.warn("⚠️ Firestore data is invalid, skipping sync");
-            }
-          } else {
-            // Firestoreにデータがない場合はAuth情報だけ返す
-            setUser({ uid: u.uid, email: u.email });
-          }
+          // Firestoreと同期（Firestoreを優先）
+          const playerData = await syncPlayerData(u.uid);
+          
+          setUser({
+            uid: u.uid,
+            email: u.email,
+            ...playerData,
+          });
+          
+          console.log("🔄 User data synced successfully");
         } catch (error) {
           console.error("ユーザー情報の取得に失敗しました:", error);
           setUser({ uid: u.uid, email: u.email });

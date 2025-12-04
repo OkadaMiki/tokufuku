@@ -62,16 +62,28 @@ export default function FortunePage() {
       },
     };
 
-    // Save and complete challenge
+    // Complete challenge
     const finalPlayer = completeDailyChallenge(updatedPlayer, "uranai");
-    savePlayer(finalPlayer);
+    
+    // Firestoreへ保存を試みる
     if (user?.uid) {
-      await savePlayerToFirestore(user.uid, finalPlayer);
+      const saveSuccess = await savePlayerToFirestore(user.uid, finalPlayer);
+      
+      if (saveSuccess) {
+        // Firestore保存成功時のみローカルに保存してUIを更新
+        savePlayer(finalPlayer);
+        setPlayer(finalPlayer);
+        setFortuneCategory(randomCat);
+        setRevealed(true);
+      } else {
+        // 保存失敗時はエラーを表示（UIは更新しない）
+        console.error("⚠️ 占い結果の保存に失敗しました");
+        alert("占い結果の保存に失敗しました。もう一度お試しください。");
+      }
+    } else {
+      // ログインしていない場合（本来は起きないはず）
+      console.error("⚠️ ユーザーがログインしていません");
     }
-
-    setPlayer(finalPlayer);
-    setFortuneCategory(randomCat);
-    setRevealed(true);
   };
 
   if (loading || !player) return <LoadingMessage />;

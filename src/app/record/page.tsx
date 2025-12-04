@@ -85,6 +85,8 @@ export default function RecordPage() {
         setSaving(false);
         return;
       }
+      
+      // まずFirestoreにレコードを保存
       const userRecordsRef = collection(db, "users", user.uid, "records");
       await addDoc(userRecordsRef, {
         type,
@@ -95,7 +97,10 @@ export default function RecordPage() {
         points: POINTS[type],
         createdAt: serverTimestamp(),
       });
+      
+      // レコード保存成功後、現在のプレイヤーデータを取得
       let player = loadPlayer(); // ローカルデータ読み込み
+      const originalPlayer = { ...player }; // 元のデータを保存（ロールバック用）
 
       // ★ バッファ保存ロジック (Data B)
       // まだバッファがない場合のみ、現在の状態（加算前）を保存する
@@ -105,20 +110,25 @@ export default function RecordPage() {
         saveBuffer(player);
       }
 
+      // EXP加算とデイリーチャレンジ更新
       player = addExp(player, category); // カテゴリに応じたXP加算
       player = completeDailyChallenge(player, "record"); // デイリーチャレンジ更新
-      savePlayer(player); // ローカルへ保存 (Data A)
 
-      // Firestoreへも保存 (Data A)
-      if (user?.uid) {
-        await savePlayerToFirestore(user.uid, player);
+      // Firestoreへ保存を試みる (Data A)
+      const saveSuccess = await savePlayerToFirestore(user.uid, player);
+      
+      if (saveSuccess) {
+        // Firestore保存成功時のみローカルに保存
+        savePlayer(player); // ローカルへ保存 (Data A)
+        showStatus(player); // コンソール出力
+        setMsg(`保存しました！ +${category}で経験値獲得`);
+        setMemo("");
+        setSub("");
+      } else {
+        // Firestore保存失敗時はロールバック
+        console.error("⚠️ Firestore保存失敗のため、ローカルデータは更新されませんでした");
+        setMsg("保存に失敗しました。もう一度お試しください。");
       }
-
-      showStatus(player); // コンソール出力
-
-      setMsg(`保存しました！ +${category}で経験値獲得`);
-      setMemo("");
-      setSub("");
     } catch (e) {
       console.error(e);
       setMsg("保存に失敗しました");

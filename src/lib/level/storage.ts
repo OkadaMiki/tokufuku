@@ -93,25 +93,89 @@ export const clearBuffer = (): void => {
   }
 };
 
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+// Firestoreからプレイヤーデータを読み込む
+export const loadPlayerFromFirestore = async (
+  uid: string,
+): Promise<PlayerData | null> => {
+  try {
+    const userRef = doc(db, "users", uid);
+    const userDoc = await getDoc(userRef);
+    
+    if (!userDoc.exists()) {
+      console.log("📭 No player data found in Firestore");
+      return null;
+    }
+
+    const data = userDoc.data();
+    if (!validatePlayerData(data)) {
+      console.error("❌ Invalid player data in Firestore:", data);
+      return null;
+    }
+
+    console.log("✅ Player loaded from Firestore:", data);
+    return data as PlayerData;
+  } catch (err) {
+    console.error("❌ Failed to load player from Firestore:", err);
+    return null;
+  }
+};
+
+// Firestoreとローカルを同期（Firestoreを優先）
+export const syncPlayerData = async (uid: string): Promise<PlayerData> => {
+  try {
+    const firestoreData = await loadPlayerFromFirestore(uid);
+    
+    if (firestoreData) {
+      // Firestoreにデータがある場合はそれを使う
+      savePlayer(firestoreData);
+      console.log("🔄 Synced local storage with Firestore data");
+      return firestoreData;
+    }
+    
+    // Firestoreにデータがない場合はローカルを使う
+    const localData = loadPlayer();
+    // ローカルデータをFirestoreに保存
+    await savePlayerToFirestore(uid, localData);
+    console.log("⬆️ Uploaded local data to Firestore");
+    return localData;
+  } catch (err) {
+    console.error("❌ Failed to sync player data:", err);
+    // フォールバック：ローカルデータを返す
+    return loadPlayer();
+  }
+};
+
 // Firestoreにプレイヤーデータを保存 (Data A)
+// リトライロジック付き
 export const savePlayerToFirestore = async (
   uid: string,
   player: PlayerData,
-): Promise<void> => {
-  try {
-    const userRef = doc(db, "users", uid);
-    // 必要なデータだけ抽出して保存（またはそのまま保存）
-    // ここでは player オブジェクト全体をマージ保存します
-    if (!validatePlayerData(player)) {
-      console.error("❌ Invalid player data, skipping Firestore save:", player);
-      return;
-    }
-    await setDoc(userRef, { ...player }, { merge: true });
-    // console.log("🔥 Player saved to Firestore:", player);
-  } catch (err) {
-    console.error("❌ Failed to save player to Firestore:", err);
+  retries = 3,
+): Promise<boolean> => {
+  if (!validatePlayerData(player)) {
+    console.error("❌ Invalid player data, skipping Firestore save:", player);
+    return false;
   }
+
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const userRef = doc(db, "users", uid);
+      await setDoc(userRef, { ...player }, { merge: true });
+      console.log(`✅ Player saved to Firestore (attempt ${attempt + 1})`);
+      return true;
+    } catch (err) {
+      console.error(`❌ Failed to save player to Firestore (attempt ${attempt + 1}):`, err);
+      
+      if (attempt < retries - 1) {
+        // 指数バックオフで待機
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
+    }
+  }
+  
+  console.error("❌ All retry attempts failed for Firestore save");
+  return false;
 };
