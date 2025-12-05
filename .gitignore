@@ -2,6 +2,7 @@
 
 # dependencies
 /docs
+/.agent
 /node_modules
 /.pnp
 .pnp.*

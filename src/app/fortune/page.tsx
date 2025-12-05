@@ -7,7 +7,9 @@ import { type Category, TOKU_CATEGORIES } from "@/constants/categories";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import {
   completeDailyChallenge,
+  loadBuffer,
   loadPlayer,
+  saveBuffer,
   savePlayer,
   savePlayerToFirestore,
 } from "@/lib/level";
@@ -20,6 +22,7 @@ export default function FortunePage() {
   const [player, setPlayer] = useState<PlayerData | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [fortuneCategory, setFortuneCategory] = useState<Category | null>(null);
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
   useEffect(() => {
     if (!loading) {
@@ -40,8 +43,13 @@ export default function FortunePage() {
     }
   }, [loading]);
 
-  const handleDraw = async () => {
-    if (!player || revealed) return;
+  const handleCardSelect = (cardIndex: number) => {
+    if (revealed) return;
+    setSelectedCard(cardIndex);
+  };
+
+  const handleConfirm = async () => {
+    if (!player || revealed || selectedCard === null) return;
 
     // Filter out "Other" categories
     // Filter out "Other" categories
@@ -62,7 +70,15 @@ export default function FortunePage() {
       },
     };
 
-    // Complete challenge
+    // ★ バッファ保存ロジック (Data B)
+    // まだバッファがない場合のみ、現在の状態（経験値加算前）を保存する
+    // これにより、Homeに戻ったときに「加算前 -> 加算後」のアニメーションが可能になる
+    const existingBuffer = loadBuffer();
+    if (!existingBuffer) {
+      saveBuffer(updatedPlayer); // fortuneは含めるが、経験値加算前の状態
+    }
+
+    // Complete challenge (経験値加算)
     const finalPlayer = completeDailyChallenge(updatedPlayer, "uranai");
     
     // Firestoreへ保存を試みる
@@ -93,21 +109,32 @@ export default function FortunePage() {
       <h1 className={styles.title}>今日の運勢</h1>
 
       {!revealed ? (
-        <div className={styles.cardContainer}>
-          {[1, 2, 3,4,5,6].map((i) => (
+        <>
+          <div className={styles.cardContainer}>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <button
+                type="button"
+                key={i}
+                className={`${styles.card} ${selectedCard === i ? styles.selected : ""}`}
+                onClick={() => handleCardSelect(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") handleCardSelect(i);
+                }}
+              >
+                
+              </button>
+            ))}
+          </div>
+          {selectedCard !== null && (
             <button
               type="button"
-              key={i}
-              className={styles.card}
-              onClick={handleDraw}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") handleDraw();
-              }}
+              className={styles.confirmButton}
+              onClick={handleConfirm}
             >
-              
+              これにする
             </button>
-          ))}
-        </div>
+          )}
+        </>
       ) : (
         <div className={styles.result}>
           <p className={styles.resultTitle}>今日のラッキーカテゴリ</p>

@@ -1,7 +1,6 @@
 import { GOOD_CATEGORIES, TOKU_CATEGORIES } from "@/constants/categories";
 import type { PlayerData } from "@/lib/playerData";
 import { getBusinessDate } from "./dateUtils";
-import { savePlayer } from "./storage";
 
 // 全カテゴリを統合
 const allCategories = [...TOKU_CATEGORIES, ...GOOD_CATEGORIES];
@@ -94,9 +93,6 @@ export const addExp = (player: PlayerData, category: string): PlayerData => {
     exp,
     totalExp,
   };
-
-  // 仮保存（後で Firestore 保存に置き換え）
-  savePlayer(updated);
 
   return updated;
 };

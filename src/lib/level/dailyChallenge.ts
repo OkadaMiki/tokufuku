@@ -1,7 +1,6 @@
 import { DAILY_CHALLENGE_EXP } from "@/constants/categories";
 import type { ChallengeId, PlayerData } from "@/lib/playerData";
 import { calculateExpUpdate, getRequiredExp } from "./calculator";
-import { savePlayer } from "./storage";
 
 // デイリーチャレンジ完了
 export const completeDailyChallenge = (
@@ -19,7 +18,7 @@ export const completeDailyChallenge = (
     `Daily Challenge '${id}' Complete! +${gain} XP → Lv${level} (${exp}/${getRequiredExp(level)})`,
   );
 
-  const updated: PlayerData = {
+  return {
     ...player,
     level,
     exp,
@@ -31,6 +30,4 @@ export const completeDailyChallenge = (
       },
     },
   };
-  savePlayer(updated);
-  return updated;
 };

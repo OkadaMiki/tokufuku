@@ -42,6 +42,35 @@
   transform: translateY(-5px);
 }
 
+.card.selected {
+  transform: scale(1.1) translateY(-10px);
+  box-shadow: 0 0 20px rgba(148, 234, 20, 0.9);
+}
+
+.confirmButton {
+  padding: 12px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.confirmButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.confirmButton:active {
+  transform: translateY(0);
+}
+
 .result {
   text-align: center;
   animation: fadeIn 0.5s ease-out;
