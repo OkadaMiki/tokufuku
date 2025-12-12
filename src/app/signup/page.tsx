@@ -89,6 +89,7 @@ export default function SignupPage() {
       />
 
       {error && <p className="text-red-500 mt-3">{error}</p>}
+      <p className="mt-4 text-sm">パスワードは半角英数字6文字以上</p>
 
       <p className="mt-4 text-sm">
         すでにアカウントをお持ちの方は{" "}
