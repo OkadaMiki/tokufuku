@@ -84,7 +84,7 @@ export const TOKU_CATEGORIES: Category[] = [
   {
     key: "toku_07",
     label: OTHER_CHILD_LABEL,
-    exp: 30,
+    exp: 300,
   },
 ];
 

@@ -16,6 +16,7 @@ import {
 import { getBusinessDate } from "@/lib/level/dateUtils";
 import type { PlayerData } from "@/lib/playerData";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 
 export default function FortunePage() {
   const { user, loading } = useAuthGuard({ requireLogin: true });
@@ -23,25 +24,38 @@ export default function FortunePage() {
   const [revealed, setRevealed] = useState(false);
   const [fortuneCategory, setFortuneCategory] = useState<Category | null>(null);
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [isDataLoading, setIsDataLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    if (!loading) {
-      const p = loadPlayer();
-      setPlayer(p);
+    const loadData = async () => {
+      if (!loading && user?.uid) {
+        setIsDataLoading(true);
+        
+        // Firestoreとローカルストレージを同期
+        const { syncPlayerData } = await import("@/lib/level");
+        const p = await syncPlayerData(user.uid);
+        
+        setPlayer(p);
 
-      const today = getBusinessDate(new Date());
-      if (p.fortune && p.fortune.lastFortuneDate === today) {
-        // Already drawn today
-        const found = TOKU_CATEGORIES.find(
-          (c) => c.key === p.fortune?.categoryKey,
-        );
-        if (found) {
-          setFortuneCategory(found);
-          setRevealed(true);
+        const today = getBusinessDate(new Date());
+        if (p.fortune && p.fortune.lastFortuneDate === today) {
+          // Already drawn today
+          const found = TOKU_CATEGORIES.find(
+            (c) => c.key === p.fortune?.categoryKey,
+          );
+          if (found) {
+            setFortuneCategory(found);
+            setRevealed(true);
+          }
         }
+        
+        setIsDataLoading(false);
       }
-    }
-  }, [loading]);
+    };
+    
+    loadData();
+  }, [loading, user]);
 
   const handleCardSelect = (cardIndex: number) => {
     if (revealed) return;
@@ -102,7 +116,7 @@ export default function FortunePage() {
     }
   };
 
-  if (loading || !player) return <LoadingMessage />;
+  if (loading || isDataLoading || !player) return <LoadingMessage />;
 
   return (
     <div className={styles.page}>
@@ -142,6 +156,19 @@ export default function FortunePage() {
           <p className={styles.bonusText}>
             このカテゴリで記録すると経験値2倍！
           </p>
+          <button
+              type="button"
+              className={styles.confirmButton}
+              onClick={() => router.push("/record")}
+            >
+              いますぐ記録する
+            </button><button
+              type="button"
+              className={styles.confirmButton}
+              onClick={() => router.push("/")}
+            >
+              ホームに戻る
+            </button>
         </div>
       )}
 

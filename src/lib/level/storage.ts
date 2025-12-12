@@ -111,7 +111,7 @@ export const loadPlayerFromFirestore = async (
 
     const data = userDoc.data();
     if (!validatePlayerData(data)) {
-      console.error("❌ Invalid player data in Firestore:", data);
+      console.log("📭 Player data in Firestore is incomplete or invalid, will use local data:", data);
       return null;
     }
 

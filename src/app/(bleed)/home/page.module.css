@@ -108,8 +108,30 @@
 .charSlot {
   position: absolute;
   left: 50%;
-  bottom: 150;
+  bottom: 150px;
   transform: translateX(-50%);
   z-index: 2;
   pointer-events: none;
+}
+
+/* 進化エフェクト */
+@keyframes glow {
+  0% {
+    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)) brightness(1);
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 50px rgba(255, 255, 255, 1)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) brightness(2.5);
+    transform: translateX(-50%) scale(1.2);
+  }
+  100% {
+    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)) brightness(1);
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.evolving {
+  animation: glow 1.5s ease-in-out infinite;
+  z-index: 10;
+  will-change: filter, transform;
 }

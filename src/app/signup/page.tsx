@@ -30,12 +30,25 @@ export default function SignupPage() {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       const uid = cred.user.uid;
-      await setDoc(doc(db, "users", uid), {
+      
+      // 初期プレイヤーデータを作成
+      const initialPlayerData = {
+        // ユーザー情報
         username,
         email,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      });
+        
+        // プレイヤーデータ
+        name: username || "プレイヤー",
+        level: 1,
+        exp: 0,
+        totalExp: 0,
+        dailyChallenge: { completed: {} },
+        lastLoginDate: new Date().toISOString(),
+      };
+      
+      await setDoc(doc(db, "users", uid), initialPlayerData);
       router.push("/home");
     } catch (err: unknown) {
       console.error(err);
