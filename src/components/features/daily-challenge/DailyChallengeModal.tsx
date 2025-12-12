@@ -114,7 +114,7 @@ function ChallengeRow({ label, done, onAction }: RowProps) {
           aria-disabled={disabled}
           title="進む"
         >
-          ↪
+          ▶
         </button>
       )}
     </div>
