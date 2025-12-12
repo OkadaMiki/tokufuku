@@ -2,7 +2,7 @@
 
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import CategorySwiper from "@/components/features/record/CategorySwiper";
 import Footer from "@/components/layout/FooterNav";
 import LoadingMessage from "@/components/ui/LoadingMessage";
@@ -53,6 +53,7 @@ export default function RecordPage() {
   // const [content, setContent] = useState<string>(""); // 任意メモ
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   // ログイン処理
   const { user, loading } = useAuthGuard({ requireLogin: true });
@@ -64,7 +65,19 @@ export default function RecordPage() {
   // 「その他」選択時にここへフォーカス
   const memoRef = useRef<HTMLTextAreaElement | null>(null);
 
-  if (loading) return <LoadingMessage />;
+  // Firestoreと同期
+  useEffect(() => {
+    const syncData = async () => {
+      if (!loading && user?.uid) {
+        const { syncPlayerData } = await import("@/lib/level");
+        await syncPlayerData(user.uid);
+        setIsDataLoading(false);
+      }
+    };
+    syncData();
+  }, [loading, user]);
+
+  if (loading || isDataLoading) return <LoadingMessage />;
 
   const canSubmit = !!(type && dateStr && (sub || category));
 

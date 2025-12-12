@@ -4,5 +4,9 @@ export default function LoadingMessage({
 }: {
   text?: string;
 }) {
-  return <p className="p-4 text-gray-500 animate-pulse text-center">{text}</p>;
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <p className="p-4 text-gray-500 animate-pulse text-center">{text}</p>
+    </div>
+  );
 }
