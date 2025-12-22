@@ -9,8 +9,8 @@ type Parent = { key: string; label: string; children?: readonly Child[] };
 
 type Props = {
   parents: readonly Parent[];
-  // 画面側の実装に合わせて「ラベル文字列」で返す
-  onPick: (categoryLabel: string, subLabel: string) => void;
+  // 画面側の実装に合わせて「キー」で返す
+  onPick: (parentKey: string, childKey: string) => void;
   // 備考欄へフォーカス（RefObject/MutableRefObject のいずれも可）
   memoRef?:
     | React.RefObject<HTMLTextAreaElement | null>
@@ -55,7 +55,7 @@ export default function CategorySwiper({ parents, onPick, memoRef }: Props) {
     const hasChildren = !!(p.children && p.children.length > 0);
 
     // 親を押した瞬間に「選択中：親」へ反映
-    onPick(p.label, "");
+    onPick(p.key, "");
     setSelected({ parentKey: p.key, childKey: undefined });
 
     if (!hasChildren) {
@@ -73,7 +73,8 @@ export default function CategorySwiper({ parents, onPick, memoRef }: Props) {
   const handleChildClick = (c: Child) => {
     if (!activeParent) return;
 
-    onPick(activeParent.label, c.label);
+    // onPick(activeParent.label, c.label);
+    onPick(activeParent.key, c.key);
     setSelected({ parentKey: activeParent.key, childKey: c.key });
 
     if (c.label === OTHER_LABEL) {

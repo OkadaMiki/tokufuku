@@ -4,7 +4,12 @@ export const getBusinessDate = (d: Date): string => {
   // 例: 5/20 04:00 -> 5/19 23:00 -> 5/19
   //     5/20 05:00 -> 5/20 00:00 -> 5/20
   copy.setHours(copy.getHours() - 5);
-  return copy.toDateString(); // "Mon Nov 21 2025" 形式
+  // return copy.toDateString(); // "Mon Nov 21 2025" 形式 -> sorting fails
+  // Return YYYY-MM-DD
+  const y = copy.getFullYear();
+  const m = String(copy.getMonth() + 1).padStart(2, "0");
+  const day = String(copy.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 };
 
 export const shouldResetDailyChallenge = (

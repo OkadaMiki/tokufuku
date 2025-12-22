@@ -5,6 +5,8 @@ import Footer from "@/components/layout/FooterNav";
 import LoadingMessage from "@/components/ui/LoadingMessage";
 import { type Category, TOKU_CATEGORIES } from "@/constants/categories";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { db } from "@/lib/firebase";
+import { addDoc, collection, getCountFromServer, query, serverTimestamp, where } from "firebase/firestore";
 import {
   completeDailyChallenge,
   loadBuffer,
@@ -74,6 +76,44 @@ export default function FortunePage() {
     const randomCat =
       validCategories[Math.floor(Math.random() * validCategories.length)];
     const today = getBusinessDate(new Date());
+
+    // Calculate toku count for this category
+    let tokuCount = 0;
+    if (user?.uid) {
+      try {
+        const recordsRef = collection(db, "users", user.uid, "records");
+        const q = query(
+          recordsRef,
+          where("category", "==", randomCat.key) 
+        );
+        // Note: We now save keys, so we query keys. Old records with labels will not be counted.
+        
+        const q2 = query(recordsRef, where("category", "==", randomCat.key)); 
+        const snapshot = await getCountFromServer(q2);
+        tokuCount = snapshot.data().count;
+      } catch (e) {
+        console.error("Failed to count toku records", e);
+      }
+    }
+
+    // tokuCount calculation (unchanged logic)
+    // ...
+
+    // Save fortune history to separate 'fortunes' collection
+    if (user?.uid) {
+      try {
+        const fortunesRef = collection(db, "users", user.uid, "fortunes");
+        addDoc(fortunesRef, {
+           result: randomCat.label,
+           categoryKey: randomCat.key,
+           date: today,
+           tokuCount: tokuCount,
+           createdAt: serverTimestamp(),
+        });
+      } catch (e) {
+        console.error("Failed to save fortune history", e);
+      }
+    }
 
     const updatedPlayer: PlayerData = {
       ...player,

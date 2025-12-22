@@ -5,9 +5,11 @@ import { getBusinessDate } from "./dateUtils";
 // 全カテゴリを統合
 const allCategories = [...TOKU_CATEGORIES, ...GOOD_CATEGORIES];
 
-// カテゴリ名から対応する経験値量を取得
-export const getCategoryExp = (categoryName: string): number | null => {
-  const found = allCategories.find((c) => c.label === categoryName);
+// カテゴリ名またはキーから対応する経験値量を取得
+export const getCategoryExp = (categoryIdentifier: string): number | null => {
+  const found = allCategories.find(
+    (c) => c.key === categoryIdentifier || c.label === categoryIdentifier,
+  );
   return found?.exp ?? null;
 };
 
@@ -57,7 +59,7 @@ export const addExp = (player: PlayerData, category: string): PlayerData => {
   }
 
   // 占いボーナス判定 (2倍)
-  // 営業日が一致 かつ カテゴリラベルが一致
+  // 営業日が一致 かつ カテゴリキー(優先)またはラベルが一致
   const businessDate = getBusinessDate(new Date());
 
   // Debug log
@@ -65,17 +67,18 @@ export const addExp = (player: PlayerData, category: string): PlayerData => {
     console.log("🔮 Fortune Debug:", {
       currentDate: businessDate,
       fortuneDate: player.fortune.lastFortuneDate,
-      fortuneCategory: player.fortune.categoryLabel,
+      fortuneKey: player.fortune.categoryKey,
       inputCategory: category,
       matchDate: player.fortune.lastFortuneDate === businessDate,
-      matchCategory: player.fortune.categoryLabel === category,
+      matchKey: player.fortune.categoryKey === category,
     });
   }
 
   if (
     player.fortune &&
     player.fortune.lastFortuneDate === businessDate &&
-    player.fortune.categoryLabel === category
+    (player.fortune.categoryKey === category ||
+      player.fortune.categoryLabel === category)
   ) {
     gain *= 2;
     console.log(`🔮 Fortune Bonus Applied! (x2) -> +${gain}`);

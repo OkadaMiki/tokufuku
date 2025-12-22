@@ -18,11 +18,15 @@ import {
   saveBuffer,
   savePlayer,
   savePlayerToFirestore,
+  getBusinessDate,
 } from "@/lib/level";
 import styles from "./page.module.css";
 
 const POINTS = { toku: 10, good: 6 } as const;
 type TypeKind = keyof typeof POINTS;
+
+// Helper to find label by key
+import { type Category, type CategoryChild, findLabelByKey } from "@/constants/categories";
 
 function todayISO() {
   const d = new Date();
@@ -81,9 +85,9 @@ export default function RecordPage() {
 
   const canSubmit = !!(type && dateStr && (sub || category));
 
-  const handlePick = (cat: string, sublabel: string) => {
-    setCategory(cat);
-    setSub(sublabel);
+  const handlePick = (catKey: string, subKey: string) => {
+    setCategory(catKey);
+    setSub(subKey);
   };
 
   const handleSubmit = async () => {
@@ -99,6 +103,20 @@ export default function RecordPage() {
         return;
       }
       
+      // レコード保存成功後、現在のプレイヤーデータを取得 -> 保存前に移動してボーナス判定に使う
+      let player = loadPlayer(); // ローカルデータ読み込み
+
+      // 占いボーナス判定
+      // 営業日が一致 かつ カテゴリラベルが一致
+      const businessDate = getBusinessDate(new Date()); // Current real-time business date
+      // Note: If user inputs a past date, logic might need adjustment if we only want bonus for "doing it today". 
+      // Current addExp logic uses `new Date()` so we match that.
+      
+      const isBonus = 
+        player.fortune &&
+        player.fortune.lastFortuneDate === businessDate &&
+        (player.fortune.categoryKey === category || player.fortune.categoryLabel === category);
+
       // まずFirestoreにレコードを保存
       const userRecordsRef = collection(db, "users", user.uid, "records");
       await addDoc(userRecordsRef, {
@@ -108,11 +126,10 @@ export default function RecordPage() {
         content: memo.trim() || null,
         occurredOn: occurred,
         points: POINTS[type],
+        hasBonus: !!isBonus,
         createdAt: serverTimestamp(),
       });
       
-      // レコード保存成功後、現在のプレイヤーデータを取得
-      let player = loadPlayer(); // ローカルデータ読み込み
       const originalPlayer = { ...player }; // 元のデータを保存（ロールバック用）
 
       // ★ バッファ保存ロジック (Data B)
@@ -203,7 +220,7 @@ export default function RecordPage() {
           memoRef={memoRef}
         />
         <p className={styles.hint}>
-          選択中：{category || "—"} {sub ? `> ${sub}` : ""}
+          選択中：{category ? findLabelByKey(category, tree) : "—"} {sub ? `> ${findLabelByKey(sub, tree)}` : ""}
         </p>
       </section>
 

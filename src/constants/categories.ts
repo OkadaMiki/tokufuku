@@ -162,3 +162,16 @@ export const DAILY_CHALLENGE_EXP: Record<string, number> = {
   uranai: 50,
   record: 50,
 };
+
+// Helper to find label by key
+export function findLabelByKey(key: string, categories: Category[]): string {
+  const parent = categories.find((c) => c.key === key);
+  if (parent) return parent.label;
+  for (const p of categories) {
+    if (p.children) {
+      const child = p.children.find((c) => c.key === key);
+      if (child) return child.label;
+    }
+  }
+  return key; // Fallback
+}
