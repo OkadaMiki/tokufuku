@@ -1,25 +1,36 @@
 "use client";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
 import AuthInput from "@/components/ui/AuthInput";
 import LoadingMessage from "@/components/ui/LoadingMessage";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth } from "@/lib/firebase";
 
-export default function LoginPage() {
+import styles from "../auth.module.css";
+
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const mail = searchParams.get("mail");
+    const pass = searchParams.get("pass");
+    if (mail) setEmail(mail);
+    if (pass) setPassword(pass);
+  }, [searchParams]);
+
   const { loading: checking } = useAuthGuard({
     requireLogin: false,
     redirectTo: "/home",
   });
+
   if (checking) return <LoadingMessage text="ログイン状態を確認中..." />;
 
   const handleLogin = async () => {
@@ -37,32 +48,54 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-6">
-      <h1 className="text-2xl font-bold mb-4">ログイン</h1>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>ログイン</h1>
 
-      <AuthInput
-        type="email"
-        placeholder="メールアドレス"
-        value={email}
-        onChange={setEmail}
-      />
-      <AuthInput
-        type="password"
-        placeholder="パスワード"
-        value={password}
-        onChange={setPassword}
-      />
+        {error && <p className={styles.error}>{error}</p>}
 
-      <PrimaryButton
-        text="ログイン"
-        onClick={handleLogin}
-        loading={loading}
-        disabled={loading}
-      />
+        <div className={styles.inputGroup}>
+          <AuthInput
+            type="email"
+            placeholder="メールアドレス"
+            value={email}
+            onChange={setEmail}
+            className={styles.input}
+          />
+          <AuthInput
+            type="password"
+            placeholder="パスワード"
+            value={password}
+            onChange={setPassword}
+            className={styles.input}
+          />
+        </div>
 
-      <a href="/signup">サインアップ</a>
+        <PrimaryButton
+          text="ログイン"
+          onClick={handleLogin}
+          loading={loading}
+          disabled={loading}
+          className={styles.button}
+        />
 
-      {error && <p className="text-red-500 mt-3">{error}</p>}
+        <div className={styles.linkArea}>
+          <p className={styles.link}>
+            アカウントをお持ちでない方 <br />
+            <a href="/signup" className={styles.linkButton}>
+              新規登録はこちら
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoadingMessage text="読み込み中..." />}>
+      <LoginForm />
+    </Suspense>
   );
 }

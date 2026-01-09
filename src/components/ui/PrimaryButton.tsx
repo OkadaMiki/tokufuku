@@ -5,6 +5,7 @@ interface Props {
   loading?: boolean;
   disabled?: boolean;
   color?: "blue" | "green" | "red";
+  className?: string;
 }
 
 export default function PrimaryButton({
@@ -13,6 +14,7 @@ export default function PrimaryButton({
   loading = false,
   disabled = false,
   color = "blue",
+  className = "",
 }: Props) {
   const base =
     color === "blue"
@@ -26,7 +28,7 @@ export default function PrimaryButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`${base} text-white px-4 py-2 rounded transition`}
+      className={`${base} text-white px-4 py-2 rounded transition ${className}`}
     >
       {loading ? `${text}中…` : text}
     </button>

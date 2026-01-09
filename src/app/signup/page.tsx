@@ -10,6 +10,8 @@ import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth, db } from "@/lib/firebase";
 
+import styles from "../auth.module.css";
+
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -59,48 +61,59 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-6">
-      <h1 className="text-2xl font-bold mb-4">新規登録</h1>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>新規登録</h1>
 
-      <AuthInput
-        placeholder="ユーザー名"
-        value={username}
-        onChange={setUsername}
-      />
-      <AuthInput
-        type="email"
-        placeholder="メールアドレス"
-        value={email}
-        onChange={setEmail}
-      />
-      <AuthInput
-        type="password"
-        placeholder="パスワード"
-        value={password}
-        onChange={setPassword}
-      />
+        {error && <p className={styles.error}>{error}</p>}
 
-      <PrimaryButton
-        text="登録"
-        onClick={handleSignup}
-        loading={loading}
-        disabled={loading}
-        color="green"
-      />
+        <div className={styles.inputGroup}>
+          <AuthInput
+            placeholder="ユーザー名"
+            value={username}
+            onChange={setUsername}
+            className={styles.input}
+          />
+          <AuthInput
+            type="email"
+            placeholder="メールアドレス"
+            value={email}
+            onChange={setEmail}
+            className={styles.input}
+          />
+          <AuthInput
+            type="password"
+            placeholder="パスワード"
+            value={password}
+            onChange={setPassword}
+            className={styles.input}
+          />
+        </div>
 
-      {error && <p className="text-red-500 mt-3">{error}</p>}
-      <p className="mt-4 text-sm">パスワードは半角英数字6文字以上</p>
+        <PrimaryButton
+          text="登録"
+          onClick={handleSignup}
+          loading={loading}
+          disabled={loading}
+          color="green"
+          className={styles.button}
+        />
 
-      <p className="mt-4 text-sm">
-        すでにアカウントをお持ちの方は{" "}
-        <button
-          type="button"
-          onClick={() => router.push("/login")}
-          className="text-blue-500 underline"
-        >
-          ログイン
-        </button>
-      </p>
+        <p className={styles.helperText}>パスワードは半角英数字6文字以上</p>
+
+        <div className={styles.linkArea}>
+          <p className={styles.link}>
+            すでにアカウントをお持ちの方 <br />
+            <button
+              type="button"
+              onClick={() => router.push("/login")}
+              className={styles.linkButton}
+            >
+              ログインはこちら
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

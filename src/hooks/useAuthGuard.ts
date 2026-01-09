@@ -60,12 +60,22 @@ export function useAuthGuard({
         setUser(null);
       }
 
+      // Calculate remaining time to satisfy the minimum 1s requirement
+      const now = performance.now();
+      const elapsedSoFar = now - start;
+      const minDuration = 1000;
+      const remaining = minDuration - elapsedSoFar;
+
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+
       setLoading(false);
 
       // 計測終了
       const end = performance.now();
-      const elapsed = Math.round(end - start);
-      console.log(`Loading finished: ${elapsed} ms`);
+      const totalElapsed = Math.round(end - start);
+      console.log(`Loading finished: ${totalElapsed} ms`);
     });
 
     return () => unsubscribe();
