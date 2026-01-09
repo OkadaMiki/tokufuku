@@ -5,7 +5,7 @@
   width: 100%;
   padding: 16px;
   /* height: 96px; */
-  background: #f2f2f2;
+  background: #CA8C7D;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,9 +15,14 @@
 .box {
   width: 64px;
   height: 64px;
-  background: #ccc;
   border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   transition: background 0.2s;
+  color: #fff;
+  text-decoration: none;
 }
 
 .box:hover {
