@@ -1,0 +1,155 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh; /* use dvh for mobile browsers */
+  background-color: #ffd894; /* Mobile typically has plain white background */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.card {
+  width: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  height: 100%; /* Take full height on mobile */
+  background: #ffd894;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  text-align: left; /* Modern mobile headers often align left */
+  color: #1a1a1a;
+  margin-bottom: 40px;
+  letter-spacing: -0.5px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+
+/* Targets the AuthInput component's input element */
+.input {
+  width: 100% !important;
+  padding: 20px !important; /* Large touch targets */
+  font-size: 17px !important; /* 16px+ prevents iOS zoom on focus */
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  background-color: #f8fafc;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  color: #334155;
+  box-shadow: none;
+  -webkit-appearance: none; /* Remove iOS default styles */
+}
+
+.input:focus {
+  border-color: #3b82f6 !important;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.input::placeholder {
+  color: #94a3b8;
+}
+
+/* Targets the PrimaryButton component */
+.button {
+  width: 100% !important;
+  padding: 18px !important; /* Tall button for easy tapping */
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  border-radius: 16px !important;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  margin-top: 12px;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.linkArea {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.link {
+  color: #64748b;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #3b82f6;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #ef4444;
+  padding: 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.helperText {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 16px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* Desktop / Tablet enhancements */
+@media (min-width: 480px) {
+  .container {
+    background-color: #f5f7fa;
+    padding: 24px;
+  }
+
+  .card {
+    max-width: 400px;
+    height: auto;
+    padding: 40px 32px;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    justify-content: flex-start;
+  }
+
+  .title {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .input {
+    padding: 16px 20px !important; /* Slightly tighter on desktop */
+    font-size: 16px !important;
+  }
+
+  .button {
+    padding: 16px !important;
+  }
+
+  .linkArea {
+    margin-top: 24px;
+  }
+}

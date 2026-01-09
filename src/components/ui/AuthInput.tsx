@@ -4,6 +4,7 @@ interface Props {
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
+  className?: string; // Add className prop
 }
 
 export default function AuthInput({
@@ -11,6 +12,7 @@ export default function AuthInput({
   placeholder,
   value,
   onChange,
+  className = "", // Default to empty string
 }: Props) {
   return (
     <input
@@ -18,7 +20,7 @@ export default function AuthInput({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="border rounded p-2 w-64 mb-2"
+      className={`border rounded p-2 w-64 mb-2 ${className}`} // Append className
     />
   );
 }

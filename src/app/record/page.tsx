@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import CategorySwiper from "@/components/features/record/CategorySwiper";
 import Footer from "@/components/layout/FooterNav";
 import LoadingMessage from "@/components/ui/LoadingMessage";
+import BoxTabSelector from "@/components/ui/BoxTabSelector";
 import { GOOD_CATEGORIES, TOKU_CATEGORIES } from "@/constants/categories";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth, db } from "@/lib/firebase";
@@ -171,22 +172,15 @@ export default function RecordPage() {
     <div className={styles.page}>
       {/* ヘッダ */}
       <header className={styles.header}>
-        <div className={styles.typeSwitch}>
-          <button
-            type="button"
-            className={`${styles.typeBtn} ${type === "toku" ? styles.typeActive : ""}`}
-            onClick={() => setType("toku")}
-          >
-            🌿 徳
-          </button>
-          <button
-            type="button"
-            className={`${styles.typeBtn} ${type === "good" ? styles.typeActive : ""}`}
-            onClick={() => setType("good")}
-          >
-            ✨ いいこと
-          </button>
-        </div>
+        <BoxTabSelector
+          options={[
+            { label: "🌿 徳", value: "toku" },
+            { label: "✨ いいこと", value: "good" },
+          ]}
+          value={type}
+          onChange={(val) => setType(val as TypeKind)}
+          className={styles.fullWidthTab}
+        />
       </header>
 
       {/* 日付 */}

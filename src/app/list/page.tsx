@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import Footer from "@/components/layout/FooterNav";
 
 import LoadingMessage from "@/components/ui/LoadingMessage";
+import BoxTabSelector from "@/components/ui/BoxTabSelector";
 import { GOOD_CATEGORIES, TOKU_CATEGORIES, findLabelByKey } from "@/constants/categories";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { db } from "@/lib/firebase";
@@ -85,6 +86,7 @@ export default function RecordListPage() {
     
     const fetchData = async () => {
       setLoadingData(true);
+      const startTime = Date.now();
       setRecords([]);
       setFortunes([]);
 
@@ -152,6 +154,13 @@ export default function RecordListPage() {
       } catch (e) {
         console.error("Error fetching data:", e);
       } finally {
+        const elapsed = Date.now() - startTime;
+        const minDuration = 1000;
+        const remaining = Math.max(0, minDuration - elapsed);
+        
+        if (remaining > 0) {
+          await new Promise((resolve) => setTimeout(resolve, remaining));
+        }
         setLoadingData(false);
       }
     };
@@ -184,36 +193,18 @@ export default function RecordListPage() {
     <div className={styles.page}>
       <div className={styles.headerContainer}>
         <div className={styles.titleRow}>
-           {/* Image shows a character/icon in header, but text title requests "Record List"? 
-               Original code had "記録一覧". I'll keep title but maybe match image style later if requested.
-               Image text says "うらない記録" (Fortune Record) but that is likely partial context. 
-               Use "記録一覧" (Record List) as generic title or dynamic title?
-               Let's keep generic for now.
-           */}
            <span className={styles.title}>うらない記録</span> 
         </div>
-
         {/* Tabs */}
-        <div className={styles.tabContainer}>
-           <button 
-             className={`${styles.tab} ${activeTab === 'toku' ? styles.activeTab : ''}`}
-             onClick={() => setActiveTab('toku')}
-           >
-             徳
-           </button>
-           <button 
-             className={`${styles.tab} ${activeTab === 'fortune' ? styles.activeTab : ''}`}
-             onClick={() => setActiveTab('fortune')}
-           >
-             占い
-           </button>
-           <button 
-             className={`${styles.tab} ${activeTab === 'good' ? styles.activeTab : ''}`}
-             onClick={() => setActiveTab('good')}
-           >
-             良いこと
-           </button>
-        </div>
+        <BoxTabSelector
+           options={[
+             { label: "徳", value: "toku" },
+             { label: "占い", value: "fortune" },
+             { label: "良いこと", value: "good" },
+           ]}
+           value={activeTab}
+           onChange={(val) => setActiveTab(val as TabType)}
+        />
 
         {/* Filter */}
         <div className={styles.monthRow}>
@@ -277,13 +268,6 @@ export default function RecordListPage() {
                     <div key={r.id} className={styles.card}>
                       <div className={styles.cardHeader}>
                         <span className={styles.date}>{dateStr}</span>
-                        {/* 
-                        <span className={`${styles.typeBadge} ${r.type === 'toku' ? styles.typeToku : styles.typeGood}`}>
-                          {r.type === 'toku' ? '徳' : '良いこと'}
-                        </span>
-                        Tabs already separate them, maybe badge is redundant? 
-                        Keeping it minimal or removing. I'll remove it as tabs imply context.
-                        */}
                       </div>
                       <div className={styles.cardBody}>
                         <strong>{label}</strong>
