@@ -33,8 +33,8 @@ export default function DailyChallengeModal({
 
   // ② 追記：未達のとき、次に誘導すべきチャレンジを決める（優先順は自由に調整OK）
   const goNextIncomplete = () => {
-    if (completed.feed !== true && onGoFeed) return onGoFeed();
     if (completed.uranai !== true && onGoUranai) return onGoUranai();
+    if (completed.feed !== true && onGoFeed) return onGoFeed();
     if (completed.record !== true && onGoRecord) return onGoRecord();
   };
 
@@ -52,34 +52,35 @@ export default function DailyChallengeModal({
         onClick={(e) => e.stopPropagation()}
         role="document"
       >
-        <div className={styles.header}>
-          <h2 className={styles.h2}>まいにちチャレンジ</h2>
-        </div>
+        <h2 className={styles.headingBadge}>まいにちチャレンジ</h2>
 
-        <div className={styles.section}>
-          <ChallengeRow
-            label="ご飯をあげよう"
-            done={!!completed.feed}
-            onAction={!completed.feed ? onGoFeed : undefined}
-          />
+        <div className={styles.panelInner}>
 
-          <ChallengeRow
-            label="今日の占いをしよう"
-            done={!!completed.uranai}
-            onAction={!completed.uranai ? onGoUranai : undefined}
-          />
+          <div className={styles.section}>
+            <ChallengeRow
+              label="今日の占いをしよう"
+              done={!!completed.uranai}
+              onAction={!completed.uranai ? onGoUranai : undefined}
+            />
 
-          <ChallengeRow
-            label="今日の記録をしよう"
-            done={!!completed.record}
-            onAction={!completed.record ? onGoRecord : undefined}
-          />
+            <ChallengeRow
+              label="ご飯をあげよう"
+              done={!!completed.feed}
+              onAction={!completed.feed ? onGoFeed : undefined}
+            />
 
-          <ChallengeRow
-            label={`チャレンジを3つ完了しよう（${doneCount}/3）`}
-            done={metaDone}
-            onAction={!metaDone ? goNextIncomplete : undefined}
-          />
+            <ChallengeRow
+              label="今日の記録をしよう"
+              done={!!completed.record}
+              onAction={!completed.record ? onGoRecord : undefined}
+            />
+
+            <ChallengeRow
+              label={`チャレンジを3つ完了しよう（${doneCount}/3）`}
+              done={metaDone}
+              onAction={!metaDone ? goNextIncomplete : undefined}
+            />
+          </div>
         </div>
 
         <div className={styles.footer}>
