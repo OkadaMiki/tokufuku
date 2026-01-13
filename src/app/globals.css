@@ -25,9 +25,19 @@ body {
   padding: 0;
 }
 
-/* 全ページ共通の左右ガター */
 :root {
+  /* 全ページ共通の左右ガター */
   --gutter: 16px;
+  /* 配色 */
+  --color--brown: #89574B;
+  --color--white: #FFFFFF;
+  --color--font--black: #50342E;
+  --color--button--main: #F6BF6E;
+  --color--button--shadow: #E4A344;
+  --color--badge--main: #FFDC5E;
+  --color--badge--shadow: #E7B811;
+
+
 }
 
 .siteShell {
