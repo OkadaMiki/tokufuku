@@ -3,18 +3,16 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 16px;
-  /* height: 96px; */
-  background: #CA8C7D;
+  padding: 10px 16px;
+  background: var(--color--pinkbrown);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #ddd;
 }
 
 .box {
   width: 64px;
-  height: 64px;
+  height: 60px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
@@ -23,8 +21,13 @@
   transition: background 0.2s;
   color: #fff;
   text-decoration: none;
+
+  span {
+    font-size: 13px;
+    line-height: 16px;
+  }
 }
 
 .box:hover {
-  background: #aaa;
+  background: var(--color--darkpinkbrown);
 }
