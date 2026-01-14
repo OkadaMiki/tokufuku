@@ -177,7 +177,7 @@
 
 .closeBtn {
   appearance: none;
-  border: solid 4px var(--color--brown);
+  border: solid 3px var(--color--brown);
   cursor: pointer;
   width: 160px;
   height: 48px;
@@ -185,6 +185,7 @@
   background: var(--color--button--main);
   color: var(--color--font--black);
   font-size: 20px;
+  line-height: 2em;
   font-weight: 500;
   box-shadow: inset 0px -6px 1px var(--color--button--shadow);
 }

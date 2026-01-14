@@ -76,7 +76,7 @@ export default function DailyChallengeModal({
             />
 
             <ChallengeRow
-              label={`3つとも完了しよう（${doneCount}/3）`}
+              label={`3個を完了させよう ( ${doneCount}/3 )`}
               done={metaDone}
               onAction={!metaDone ? goNextIncomplete : undefined}
             />
