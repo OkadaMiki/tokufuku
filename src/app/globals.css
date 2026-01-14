@@ -31,6 +31,9 @@ body {
   /* 配色 */
   --color--brown: #89574B;
   --color--rightbrown: #D18B00;
+  --color--pinkbrown: #CA8C7D;
+  --color--darkpinkbrown: #B17E72;
+  --color--cocoabrown: #9C7C74;
   --color--white: #FFFFFF;
   --color--font--black: #50342E;
   --color--button--main: #F6BF6E;
