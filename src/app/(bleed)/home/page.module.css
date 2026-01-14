@@ -67,17 +67,9 @@
 /* ボタン群 */
 .primaryButton {
   appearance: none;
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
   padding: 10px 14px;
   min-height: 40px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #111111;
-  font-size: 14px;
-  font-weight: 700;
   text-decoration: none;
   cursor: pointer;
   transition:
@@ -85,15 +77,24 @@
     box-shadow 120ms ease;
 }
 
-.primaryButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
 .openChallenge {
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
+  width: 112px;
+  height: 112px;
+  padding: 8px;
+  border: none;
+  background: none;
+
+  Image {
+    cursor: pointer;
+    transition:
+      transform 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  Image:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
 }
 
 .charSlot {

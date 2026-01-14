@@ -39,13 +39,13 @@ export default function HomePage() {
   useEffect(() => {
     const loadAndAnimate = async () => {
       if (loading || !user?.uid) return;
-      
+
       setIsDataLoading(true);
-      
+
       // Firestoreとローカルストレージを同期
       const { syncPlayerData } = await import("@/lib/level");
       await syncPlayerData(user.uid);
-      
+
       // 同期後にローカルから読み込み
       const realPlayer = loadPlayer();
       const bufferPlayer = loadBuffer();
@@ -91,15 +91,15 @@ export default function HomePage() {
         const required = getRequiredExp(currentLevel);
         if (currentExp >= required) {
           currentExp -= required;
-          
+
           // レベル9 -> 10への進化判定
           if (currentLevel === 9) {
             currentLevel++;
-            
+
             // 進化演出開始
             console.log("✨ Evolution sequence started!");
             setIsEvolving(true);
-            
+
             // 状態更新（レベル10になった瞬間を表示）
             setDisplayPlayer({
               ...realPlayer,
@@ -107,7 +107,7 @@ export default function HomePage() {
               exp: currentExp,
               totalExp: currentTotalExp,
             });
-            
+
             // アニメーション一時停止して演出を見せる
             setTimeout(() => {
               console.log("✨ Evolution sequence ended");
@@ -115,10 +115,10 @@ export default function HomePage() {
               // 演出終了後にアニメーション再開
               requestRef.current = requestAnimationFrame(animate);
             }, 3000); // 3秒間演出
-            
+
             return; // ここで一旦ループを抜ける
           }
-          
+
           currentLevel++;
         }
 
@@ -143,7 +143,7 @@ export default function HomePage() {
         clearTimeout(timer);
       };
     };
-    
+
     loadAndAnimate();
   }, [loading, user]);
 
@@ -167,7 +167,7 @@ export default function HomePage() {
               onClick={() => setOpen(true)}
               className={`${styles.primaryButton} ${styles.openChallenge}`}
             >
-              チャレンジへ
+              <Image src={"/assets/btns/challengebtn.svg"} alt={"まいにちチャレンジへ"} width={96} height={96} />
             </button>
             <DailyChallengeModal
               open={open}
@@ -181,10 +181,11 @@ export default function HomePage() {
               }}
               onGoRecord={() => router.push("/record")}
 
-              
+
               state={displayPlayer.dailyChallenge}
             />
           </div>
+          <div className={styles.meal}></div>
           <div className={`${styles.charSlot} ${isEvolving ? styles.evolving : ""}`}>
             <Image
               src={charImage}
