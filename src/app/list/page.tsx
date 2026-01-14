@@ -221,78 +221,81 @@ export default function RecordListPage() {
            </select>
         </div>
       </div>
-      
-      {loadingData ? (
-         <div className={styles.loading}>読み込み中...</div>
-      ) : (
-        <>
-          {/* CONTENT AREA */}
-          {activeTab === 'fortune' ? (
-             fortunes.length === 0 ? (
-               <p className={styles.empty}>この月の占い記録はありません。</p>
-             ) : (
-               fortunes.map((f) => (
-                 <div key={f.id} className={styles.card}>
-                   <div className={styles.cardHeader}>
-                     <span className={styles.date}>{f.date.replace(/-/g, '年').replace(/$/, '日').replace(/年(\d+)年/, '年$1月')}</span>
-                     {/* Formatter above is hacky, let's use standard JS for display */}
-                     {/* Actually easier: f.date is YYYY-MM-DD. display: YYYY年M月D日 */}
-                   </div>
-                   <div className={styles.cardBody}>
-                     <strong>{f.result}</strong>
-                     <p className={styles.memo}>過去の徳積み: {f.tokuCount}回</p>
-                   </div>
-                   <div className={styles.actionRow}>
-                   <button
-                        type="button"
-                        className={`${styles.actionBtn} ${styles.deleteBtn}`}
-                        onClick={() => handleDelete(f.id, true)}
-                      >
-                        削除
-                      </button>
-                   </div>
-                 </div>
-               ))
-             )
-          ) : (
-             records.length === 0 ? (
-               <p className={styles.empty}>この月の記録はありません。</p>
-             ) : (
-               records.map((r) => {
-                 // Convert timestamp
-                 const d = new Date(r.occurredOn.seconds * 1000);
-                 const dateStr = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-                 const label = findLabelByKey(r.category, tree); // Resolve key to label
 
-                 return (
-                    <div key={r.id} className={styles.card}>
-                      <div className={styles.cardHeader}>
-                        <span className={styles.date}>{dateStr}</span>
-                      </div>
-                      <div className={styles.cardBody}>
-                        <strong>{label}</strong>
-                        {r.subcategory && ` > ${findLabelByKey(r.subcategory, tree)}`}
-                        {r.content && <p className={styles.memo}>{r.content}</p>}
-                        {r.hasBonus && <span style={{fontSize:'12px', color:'#f59e0b'}}>★ 占いボーナス！</span>}
-                      </div>
-                      <div className={styles.actionRow}>
-                        <button
+      <main className={styles.scrollArea}>
+        
+        {loadingData ? (
+           <div className={styles.loading}>読み込み中...</div>
+        ) : (
+          <>
+            {/* CONTENT AREA */}
+            {activeTab === 'fortune' ? (
+               fortunes.length === 0 ? (
+                 <p className={styles.empty}>この月の占い記録はありません。</p>
+               ) : (
+                 fortunes.map((f) => (
+                   <div key={f.id} className={styles.card}>
+                     <div className={styles.cardHeader}>
+                       <span className={styles.date}>{f.date.replace(/-/g, '年').replace(/$/, '日').replace(/年(\d+)年/, '年$1月')}</span>
+                       {/* Formatter above is hacky, let's use standard JS for display */}
+                       {/* Actually easier: f.date is YYYY-MM-DD. display: YYYY年M月D日 */}
+                     </div>
+                     <div className={styles.cardBody}>
+                       <strong>{f.result}</strong>
+                       <p className={styles.memo}>過去の徳積み: {f.tokuCount}回</p>
+                     </div>
+                     <div className={styles.actionRow}>
+                     <button
                           type="button"
                           className={`${styles.actionBtn} ${styles.deleteBtn}`}
-                          onClick={() => handleDelete(r.id, false)}
+                          onClick={() => handleDelete(f.id, true)}
                         >
                           削除
                         </button>
-                      </div>
-                    </div>
-                 );
-               })
-             )
-          )}
-        </>
-      )}
+                     </div>
+                   </div>
+                 ))
+               )
+            ) : (
+               records.length === 0 ? (
+                 <p className={styles.empty}>この月の記録はありません。</p>
+               ) : (
+                 records.map((r) => {
+                   // Convert timestamp
+                   const d = new Date(r.occurredOn.seconds * 1000);
+                   const dateStr = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+                   const label = findLabelByKey(r.category, tree); // Resolve key to label
 
-      <Footer />
+                   return (
+                      <div key={r.id} className={styles.card}>
+                        <div className={styles.cardHeader}>
+                          <span className={styles.date}>{dateStr}</span>
+                        </div>
+                        <div className={styles.cardBody}>
+                          <strong>{label}</strong>
+                          {r.subcategory && ` > ${findLabelByKey(r.subcategory, tree)}`}
+                          {r.content && <p className={styles.memo}>{r.content}</p>}
+                          {r.hasBonus && <span style={{fontSize:'12px', color:'#f59e0b'}}>★ 占いボーナス！</span>}
+                        </div>
+                        <div className={styles.actionRow}>
+                          <button
+                            type="button"
+                            className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                            onClick={() => handleDelete(r.id, false)}
+                          >
+                            削除
+                          </button>
+                        </div>
+                      </div>
+                   );
+                 })
+               )
+            )}
+          </>
+        )}
+      </main>
+
+      <Footer className={styles.gridFooter} />
     </div>
   );
 }

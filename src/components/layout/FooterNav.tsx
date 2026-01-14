@@ -2,9 +2,13 @@
 import Link from "next/link";
 import styles from "./Footer.module.css";
 
-export default function Footer() {
+type Props = {
+  className?: string;
+};
+
+export default function Footer({ className }: Props) {
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} ${className || ""}`}>
       <Link href="/list" className={styles.box}>
         <img src="/assets/footer/log.svg" alt="" />
         <span>ログ</span>

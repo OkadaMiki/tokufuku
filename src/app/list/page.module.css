@@ -1,7 +1,24 @@
 .page {
   display: grid;
-  gap: 16px;
+  grid-template-rows: auto 1fr auto; /* Header, Content, Footer */
+  height: 100dvh;
+  overflow: hidden;
+  padding: 0;
+}
+
+.scrollArea {
+  overflow-y: auto;
   padding: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gridFooter {
+  position: relative;
+  width: 100%;
+  left: auto;
+  bottom: auto;
 }
 
 .headerContainer {
@@ -9,11 +26,8 @@
   flex-direction: column;
   gap: 16px;
   background-color: #fce7f3;
-  /* Light pink/orange matching theme roughly */
-  margin: -64px -16px 16px -16px;
-  /* Bleed to top/edges */
   padding: 64px 0 16px 0;
-  /* Remove horizontal padding so Tabs can bleed */
+  /* No bleed margins needed as it's a direct child of the 0-padding page grid */
 }
 
 .titleRow {
