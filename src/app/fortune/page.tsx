@@ -129,7 +129,20 @@ export default function FortunePage() {
     // これにより、Homeに戻ったときに「加算前 -> 加算後」のアニメーションが可能になる
     const existingBuffer = loadBuffer();
     if (!existingBuffer) {
-      saveBuffer(updatedPlayer); // fortuneは含めるが、経験値加算前の状態
+      // 経験値加算前の状態を保存するが、タスクは「完了済」として見せる
+      // これによりHomeに戻った瞬間にタスク完了バッジが表示され、
+      // その後ゲージが伸びるアニメーションが行われる
+      const bufferedPlayer: PlayerData = {
+        ...updatedPlayer,
+        dailyChallenge: {
+          ...updatedPlayer.dailyChallenge,
+          completed: {
+            ...updatedPlayer.dailyChallenge?.completed,
+            uranai: true,
+          },
+        },
+      };
+      saveBuffer(bufferedPlayer); 
     }
 
     // Complete challenge (経験値加算)
@@ -190,25 +203,35 @@ export default function FortunePage() {
           )}
         </>
       ) : (
-        <div className={styles.result}>
-          <p className={styles.resultTitle}>今日のラッキーカテゴリ</p>
-          <div className={styles.categoryName}>{fortuneCategory?.label}</div>
-          <p className={styles.bonusText}>
-            このカテゴリで記録すると経験値2倍！
-          </p>
-          <button
-              type="button"
-              className={styles.confirmButton}
-              onClick={() => router.push("/record")}
-            >
-              いますぐ記録する
-            </button><button
-              type="button"
-              className={styles.confirmButton}
-              onClick={() => router.push("/")}
-            >
-              ホームに戻る
-            </button>
+        <div className={styles.resultOverlay}>
+          <div className={styles.resultCard}>
+            <div className={styles.cardContent}>
+              <p className={styles.resultTitle}>今日のラッキーカテゴリ</p>
+              <div className={styles.categoryName}>{fortuneCategory?.label}</div>
+              <div className={styles.divider}></div>
+              <p className={styles.bonusText}>
+                このカテゴリで記録すると<br />
+                経験値<span className={styles.highlight}>2倍</span>！
+              </p>
+            </div>
+            
+            <div className={styles.buttonGroup}>
+              <button
+                type="button"
+                className={styles.actionButton}
+                onClick={() => router.push("/record")}
+              >
+                いますぐ記録する
+              </button>
+              <button
+                type="button"
+                className={styles.textButton}
+                onClick={() => router.push("/home")}
+              >
+                ホームに戻る
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
