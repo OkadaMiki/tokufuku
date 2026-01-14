@@ -58,7 +58,7 @@ export default function DailyChallengeModal({
 
           <div className={styles.section}>
             <ChallengeRow
-              label="今日の占いをしよう"
+              label="占いをしよう"
               done={!!completed.uranai}
               onAction={!completed.uranai ? onGoUranai : undefined}
             />
@@ -70,13 +70,13 @@ export default function DailyChallengeModal({
             />
 
             <ChallengeRow
-              label="今日の記録をしよう"
+              label="記録をしよう"
               done={!!completed.record}
               onAction={!completed.record ? onGoRecord : undefined}
             />
 
             <ChallengeRow
-              label={`チャレンジを3つ完了しよう（${doneCount}/3）`}
+              label={`3つとも完了しよう（${doneCount}/3）`}
               done={metaDone}
               onAction={!metaDone ? goNextIncomplete : undefined}
             />
@@ -100,24 +100,40 @@ type RowProps = {
 };
 
 function ChallengeRow({ label, done, onAction }: RowProps) {
-  const disabled = done || !onAction;
+  const clickable = !done && !!onAction;
+
   return (
-    <div className={`${styles.card} ${done ? styles.cardDone : ""}`}>
+    <div
+      className={`${styles.card} ${done ? styles.cardDone : ""} ${clickable ? styles.cardClickable : ""}`}
+      onClick={clickable ? onAction : undefined}
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : -1}
+      aria-disabled={!clickable}
+      onKeyDown={(e) => {
+        if (!clickable) return;
+        if (e.key === "Enter" || e.key === " ") onAction?.();
+      }}
+    >
       <div className={styles.cardLabel}>{label}</div>
+
       {done ? (
         <span className={styles.doneBadge}>完了</span>
       ) : (
         <button
           type="button"
-          className={`${styles.smallBtn} ${styles.smallBtnIcon}`}
-          onClick={onAction}
-          disabled={disabled}
-          aria-disabled={disabled}
+          className={styles.smallBtn}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAction?.();
+          }}
+          disabled={!clickable}
+          aria-disabled={!clickable}
           title="進む"
         >
-          ▶
+          <span className={styles.playIcon} aria-hidden="true" />
         </button>
       )}
     </div>
   );
 }
+
