@@ -30,10 +30,13 @@ body {
   --gutter: 16px;
   /* 配色 */
   --color--brown: #89574B;
+  --color--rightbrown: #D18B00;
   --color--white: #FFFFFF;
   --color--font--black: #50342E;
   --color--button--main: #F6BF6E;
   --color--button--shadow: #E4A344;
+  --color--buttongrey--main: #CCCCCC;
+  --color--buttongrey--shadow: #9A9797;
   --color--badge--main: #FFDC5E;
   --color--badge--shadow: #E7B811;
 
