@@ -2,7 +2,7 @@
   width: 100%;
   display: grid;
   gap: 12px;
-  padding: 64px 16px 16px 16px;
+  padding: var(--gutter);
 }
 
 .header {

@@ -51,18 +51,9 @@
   /* 任意 */
 }
 
-/* オプション：床の境目をふんわり */
-/* .scene {
-  --floor-shadow-h: 12px;
-}
-
-.scene::after {
-  box-shadow: 0 calc(var(--floor-shadow-h) * -1) 12px rgba(0, 0, 0, 0.08) inset;
-} */
-
 .page {
   min-height: 100dvh;
-  padding: 64px 16px 16px 16px;
+  padding: var(--gutter);
 }
 
 .stack {
@@ -120,10 +111,12 @@
     filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)) brightness(1);
     transform: translateX(-50%) scale(1);
   }
+
   50% {
     filter: drop-shadow(0 0 50px rgba(255, 255, 255, 1)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) brightness(2.5);
     transform: translateX(-50%) scale(1.2);
   }
+
   100% {
     filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)) brightness(1);
     transform: translateX(-50%) scale(1);

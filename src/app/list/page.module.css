@@ -1,16 +1,19 @@
 .page {
   display: grid;
   gap: 16px;
-  padding: 64px 16px 16px 16px;
+  padding: var(--gutter);
 }
 
 .headerContainer {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background-color: #fce7f3; /* Light pink/orange matching theme roughly */
-  margin: -64px -16px 16px -16px; /* Bleed to top/edges */
-  padding: 64px 0 16px 0; /* Remove horizontal padding so Tabs can bleed */
+  background-color: #fce7f3;
+  /* Light pink/orange matching theme roughly */
+  margin: -64px -16px 16px -16px;
+  /* Bleed to top/edges */
+  padding: 64px 0 16px 0;
+  /* Remove horizontal padding so Tabs can bleed */
 }
 
 .titleRow {
@@ -18,7 +21,8 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 8px;
-  padding: 0 16px; /* Add padding back */
+  padding: 0 16px;
+  /* Add padding back */
 }
 
 .title {
@@ -64,7 +68,8 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 16px; /* Add padding back */
+  padding: 0 16px;
+  /* Add padding back */
 }
 
 .monthSelect {
@@ -72,7 +77,8 @@
   font-size: 14px;
   font-weight: 600;
   color: #fff;
-  background: #a87b8b; /* Brownish matching the image */
+  background: #a87b8b;
+  /* Brownish matching the image */
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -220,6 +226,7 @@
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     opacity: 0.5;

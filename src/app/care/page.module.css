@@ -53,7 +53,7 @@
 
 .page {
   min-height: 100dvh;
-  padding: 64px 16px 16px 16px;
+  padding: var(--gutter);
 }
 
 .charSlot {

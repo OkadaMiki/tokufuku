@@ -47,14 +47,6 @@ body {
   min-height: 100dvh;
 }
 
-.siteContent {
-  padding: 48px var(--gutter) var(--gutter) var(--gutter);
-}
-
-/* 背景をデザイン通りに見せたいページのためのフラグ */
-.siteShell--bleed .siteContent {
-  padding: 0;
-}
 
 /* iOS のくぼみ対策（必要なら） */
 @supports (padding: max(0px)) {
