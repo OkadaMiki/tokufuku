@@ -22,6 +22,7 @@ import {
   getBusinessDate,
 } from "@/lib/level";
 import styles from "./page.module.css";
+import Image from "next/image";
 
 const POINTS = { toku: 10, good: 6 } as const;
 type TypeKind = keyof typeof POINTS;
@@ -103,7 +104,7 @@ export default function RecordPage() {
         setSaving(false);
         return;
       }
-      
+
       // レコード保存成功後、現在のプレイヤーデータを取得 -> 保存前に移動してボーナス判定に使う
       let player = loadPlayer(); // ローカルデータ読み込み
 
@@ -112,8 +113,8 @@ export default function RecordPage() {
       const businessDate = getBusinessDate(new Date()); // Current real-time business date
       // Note: If user inputs a past date, logic might need adjustment if we only want bonus for "doing it today". 
       // Current addExp logic uses `new Date()` so we match that.
-      
-      const isBonus = 
+
+      const isBonus =
         player.fortune &&
         player.fortune.lastFortuneDate === businessDate &&
         (player.fortune.categoryKey === category || player.fortune.categoryLabel === category);
@@ -130,7 +131,7 @@ export default function RecordPage() {
         hasBonus: !!isBonus,
         createdAt: serverTimestamp(),
       });
-      
+
       const originalPlayer = { ...player }; // 元のデータを保存（ロールバック用）
 
       // ★ バッファ保存ロジック (Data B)
@@ -147,7 +148,7 @@ export default function RecordPage() {
 
       // Firestoreへ保存を試みる (Data A)
       const saveSuccess = await savePlayerToFirestore(user.uid, player);
-      
+
       if (saveSuccess) {
         // Firestore保存成功時のみローカルに保存
         savePlayer(player); // ローカルへ保存 (Data A)
@@ -172,6 +173,11 @@ export default function RecordPage() {
     <div className={styles.page}>
       {/* ヘッダ */}
       <header className={styles.header}>
+        <div className={styles.head}>
+          <div className={styles.pageName}>
+            <Image src={"/assets/headers/recordh1.svg"} alt={"記録画面"} width={168} height={72} />
+          </div>
+        </div>
         <BoxTabSelector
           options={[
             { label: "🌿 徳", value: "toku" },
