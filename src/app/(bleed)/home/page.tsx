@@ -180,22 +180,42 @@ export default function HomePage() {
                 router.push("/fortune");
               }}
               onGoRecord={() => router.push("/record")}
-
-
               state={displayPlayer.dailyChallenge}
             />
           </div>
-          <div className={styles.meal}></div>
-          <div className={`${styles.charSlot} ${isEvolving ? styles.evolving : ""}`}>
-            <Image
-              src={charImage}
-              alt="キャラクター"
-              width={200}
-              height={180}
-              priority
-              unoptimized
-            />
+
+          {/* キャラ + おにぎり（同じ基準で配置） */}
+          <div className={styles.charWrap}>
+            <button
+              type="button"
+              className={styles.gohanBtn}
+              onClick={() => {
+                // ここに「ご飯をあげる処理」を後で追加
+                console.log("ごはん！");
+              }}
+              aria-label="ご飯をあげる"
+            >
+              <Image
+                src="/assets/btns/gohan.svg"
+                alt=""
+                fill
+                sizes="160px, 192px"
+                priority
+              />
+            </button>
+
+            <div className={`${styles.charSlot} ${isEvolving ? styles.evolving : ""}`}>
+              <Image
+                src={charImage}
+                alt="キャラクター"
+                fill
+                sizes="200px, 180px"
+                priority
+                unoptimized
+              />
+            </div>
           </div>
+
           <FooterNav />
         </div>
       </HomeScene>
