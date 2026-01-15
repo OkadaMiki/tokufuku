@@ -4,6 +4,7 @@
   height: 100dvh;
   overflow: hidden;
   padding: 0;
+  background: #ffd894;
 }
 
 .scrollArea {
@@ -12,6 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  /* background: #ffd894; */
 }
 
 .gridFooter {
@@ -24,19 +26,16 @@
 .headerContainer {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background-color: #fce7f3;
-  padding: 64px 0 16px 0;
-  /* No bleed margins needed as it's a direct child of the 0-padding page grid */
+  /* background: #ffd894; */
+  padding: 0 0 16px 0;
 }
 
 .titleRow {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 8px;
-  padding: 0 16px;
-  /* Add padding back */
+  padding: 64px 0 16px 0;
+  background: url(/assets/headers/recordh1back.jpg);
 }
 
 .title {
@@ -51,10 +50,6 @@
 /* Tabs */
 .tabContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
-  padding: 4px;
 }
 
 .tab {
@@ -79,11 +74,11 @@
 
 /* Month Filter */
 .monthRow {
+  margin-top: 16px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   padding: 0 16px;
-  /* Add padding back */
 }
 
 .monthSelect {

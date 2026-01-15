@@ -1,13 +1,7 @@
 .container {
   display: flex;
   width: 100%;
-  gap: 0; /* Connected buttons? Or spaced? User said "横に並べて" (lined up side by side). */
-  /* If they are radio buttons, they usually touch or have small gap. 
-     Description: "This box... lined up horizontally".
-     I'll use flex with no gap or small gap? 'lined up' often implies adjacent.
-     Let's try gap: 4px for safety or 0 if they should look like a bar.
-     Given "2,3,4 items", maybe `display: grid` is better for equal width.
-  */
+  gap: 0; 
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
@@ -19,38 +13,20 @@
   appearance: none;
   border: none;
   border-radius: 0;
-  padding: 12px 8px; /* Vertical padding */
+  padding: 12px 8px; 
   font-size: 14px;
   font-weight: 700;
-  color: #fff; /* Assuming white text on dark bg */
+  color: #fff; 
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
   
-  /* Default State: Unselected/Inactive? 
-     Wait, user said:
-     "Paste #C19084 box... inner shadow... 
-      WHEN SELECTED change to #9C7C74, no inner shadow"
-     
-     So the "Default" state is likely the UNSELECTED state.
-     Active state is SELECTED.
-  */
   background-color: #C19084;
-  /* Inner shadow: X0, Y-5, #9C7C74, Opacity 100% */
-  /* Y-5 in box-shadow inset usually means shadow is at bottom pushing up? Or top pushing down? 
-     Standard inset: positive Y is top shadow growing down. Negative Y is bottom shadow growing up.
-     But typical "inner shadow" terminology might mean "Shadow is offset -5px vertically".
-     If I want a shadow at the top inside, it is `inset 0 5px`.
-     If I want a shadow at the bottom inside, it is `inset 0 -5px`.
-     "X0, Y-5" usually means offset.
-     Let's assume `inset 0px -5px 0px 0px #9C7C74`.
-  */
   box-shadow: inset 0px -5px 0px 0px #9C7C74;
-  opacity: 1; /* Opacity of element is 1 */
+  opacity: 1; 
 }
 
 .active {
-  /* Selected State */
   background-color: #9C7C74;
-  box-shadow: none; /* No inner shadow */
+  box-shadow: none;
 }
