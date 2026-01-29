@@ -1,0 +1,114 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+  animation: fadeInOut 2s ease-in-out forwards;
+}
+
+.container {
+  position: relative;
+  width: 280px;
+  height: 200px;
+}
+
+/* UP! テキスト */
+.upText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "M PLUS Rounded 1c", "Hiragino Sans", sans-serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: #4ecdc4;
+  text-shadow: 
+    3px 3px 0 #fff,
+    -3px -3px 0 #fff,
+    3px -3px 0 #fff,
+    -3px 3px 0 #fff,
+    0 4px 8px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.05em;
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* 矢印共通 */
+.arrow {
+  position: absolute;
+  animation: floatUp 1.5s ease-out infinite;
+}
+
+/* 左の矢印 */
+.arrowLeft {
+  left: 0;
+  top: 55%;
+  transform: translateY(-50%);
+  animation-delay: 0.1s;
+}
+
+/* 右上の矢印 */
+.arrowRightTop {
+  right: 10px;
+  top: 10%;
+  animation-delay: 0.3s;
+}
+
+/* 右下の矢印 */
+.arrowRightBottom {
+  right: -10px;
+  top: 50%;
+  animation-delay: 0s;
+}
+
+/* フェードインアウトアニメーション */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* UP!のバウンスアニメーション */
+@keyframes bounceIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 矢印の浮き上がりアニメーション */
+@keyframes floatUp {
+  0% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-15px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+}

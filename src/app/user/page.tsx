@@ -6,15 +6,13 @@ import FooterNav from "@/components/layout/FooterNav";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth } from "@/lib/firebase";
-import { clearPlayer } from "@/lib/level/storage";
+import { clearAllLocalData } from "@/lib/level/storage";
 
 export default function UserPage() {
   const router = useRouter();
   const handleLogout = async () => {
     await signOut(auth);
-    clearPlayer();
-    // localStorage.removeItem("authUser"); // authUserは使っていないようだが念のため残すか、clearPlayerで十分か？
-    // 元のコードにあったので残すが、playerデータはclearPlayerで消す
+    clearAllLocalData(); // ログアウト時はすべてのローカルデータを削除
     router.push("/login");
   };
   const { user } = useAuthGuard({ requireLogin: true });

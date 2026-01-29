@@ -1,72 +1,68 @@
 import { type PlayerData, validatePlayerData } from "@/lib/playerData";
 import { shouldResetDailyChallenge } from "./dateUtils";
 
-// プレイヤーデータを保存
-export const savePlayer = (player: PlayerData): void => {
+const LOCAL_CACHE_KEY = "player_cache";
+const LOCAL_BUFFER_KEY = "player_buffer";
+
+// ===== ローカルキャッシュ関連（表示高速化用、改ざん防止のため信頼しない） =====
+
+// キャッシュを保存（表示高速化用、Firestore同期後に呼ばれる）
+export const saveLocalCache = (player: PlayerData): void => {
   try {
-    localStorage.setItem("player", JSON.stringify(player));
-    console.log("✅ Player saved:", player);
+    localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(player));
+    console.log("📦 Local cache saved");
   } catch (err) {
-    console.error("❌ Failed to save player:", err);
+    console.error("❌ Failed to save local cache:", err);
   }
 };
 
-// プレイヤーデータを削除 (ログアウト時や再同期前など)
-export const clearPlayer = (): void => {
+// キャッシュを読み込み（Firestore同期前の高速表示用）
+export const loadLocalCache = (): PlayerData | null => {
+  if (typeof window === "undefined") return null;
   try {
+    const raw = localStorage.getItem(LOCAL_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!validatePlayerData(parsed)) return null;
+    return parsed as PlayerData;
+  } catch (_err) {
+    return null;
+  }
+};
+
+// キャッシュを削除（バッファは保持）
+// ※アニメーション用バッファはアニメーション完了時にclearBuffer()で削除される
+export const clearLocalCache = (): void => {
+  try {
+    localStorage.removeItem(LOCAL_CACHE_KEY);
+    // 旧キー（player）も削除
     localStorage.removeItem("player");
-    localStorage.removeItem("player_buffer"); // バッファも削除
-    console.log("🗑️ Player data cleared from localStorage");
+    console.log("🗑️ Local cache cleared (buffer preserved)");
   } catch (err) {
-    console.error("❌ Failed to clear player data:", err);
+    console.error("❌ Failed to clear local cache:", err);
   }
 };
 
-// 保存されたプレイヤーデータを読み込み（default に name を含める）
-export const loadPlayer = (): PlayerData => {
-  if (typeof window === "undefined") {
-    return { name: "プレイヤー", level: 1, exp: 0, totalExp: 0 };
-  }
+// 完全クリア（ログアウト時に使用）
+export const clearAllLocalData = (): void => {
   try {
-    const raw = localStorage.getItem("player");
-    let player: PlayerData;
-
-    if (!raw) {
-      player = { name: "プレイヤー", level: 1, exp: 0, totalExp: 0 };
-    } else {
-      const parsed = JSON.parse(raw);
-      player = {
-        name: typeof parsed.name === "string" ? parsed.name : "プレイヤー",
-        level: typeof parsed.level === "number" ? parsed.level : 1,
-        exp: typeof parsed.exp === "number" ? parsed.exp : 0,
-        totalExp: typeof parsed.totalExp === "number" ? parsed.totalExp : 0,
-        dailyChallenge: parsed.dailyChallenge || { completed: {} },
-        lastLoginDate: parsed.lastLoginDate,
-        fortune: parsed.fortune,
-      };
-    }
-
-    if (shouldResetDailyChallenge(player.lastLoginDate)) {
-      console.log("🔄 日付が変わったため、デイリーチャレンジをリセットします");
-      player.dailyChallenge = { completed: {} };
-    }
-
-    // 最終ログイン日時を更新して保存
-    player.lastLoginDate = new Date().toISOString();
-    savePlayer(player);
-
-    return player;
+    localStorage.removeItem(LOCAL_CACHE_KEY);
+    localStorage.removeItem(LOCAL_BUFFER_KEY);
+    // 旧キーも削除
+    localStorage.removeItem("player");
+    localStorage.removeItem("player_buffer");
+    console.log("🗑️ All local data cleared");
   } catch (err) {
-    console.error("Failed to load player from localStorage:", err);
-    return { name: "プレイヤー", level: 1, exp: 0, totalExp: 0 };
+    console.error("❌ Failed to clear all local data:", err);
   }
 };
+
+// ===== アニメーション用バッファ =====
 
 // バッファ（アニメーション用）を保存
 export const saveBuffer = (player: PlayerData): void => {
   try {
-    localStorage.setItem("player_buffer", JSON.stringify(player));
-    // console.log("📦 Buffer saved:", player);
+    localStorage.setItem(LOCAL_BUFFER_KEY, JSON.stringify(player));
   } catch (err) {
     console.error("❌ Failed to save buffer:", err);
   }
@@ -76,7 +72,7 @@ export const saveBuffer = (player: PlayerData): void => {
 export const loadBuffer = (): PlayerData | null => {
   if (typeof window === "undefined") return null;
   try {
-    const raw = localStorage.getItem("player_buffer");
+    const raw = localStorage.getItem(LOCAL_BUFFER_KEY);
     if (!raw) return null;
     return JSON.parse(raw) as PlayerData;
   } catch (_err) {
@@ -87,14 +83,63 @@ export const loadBuffer = (): PlayerData | null => {
 // バッファを削除（同期完了後など）
 export const clearBuffer = (): void => {
   try {
-    localStorage.removeItem("player_buffer");
+    localStorage.removeItem(LOCAL_BUFFER_KEY);
   } catch (err) {
     console.error("Failed to clear buffer:", err);
   }
 };
 
+// ===== 後方互換性のためのエイリアス =====
+
+// 旧API: savePlayer → saveLocalCache
+export const savePlayer = saveLocalCache;
+
+// 旧API: loadPlayer → getPlayerData（Firestoreから同期した最新データを返す）
+// ただし、オフライン時や即座に表示が必要な場合はキャッシュを返す
+export const loadPlayer = (): PlayerData => {
+  const cached = loadLocalCache();
+  if (cached) {
+    // デイリーチャレンジのリセット判定
+    if (shouldResetDailyChallenge(cached.lastLoginDate)) {
+      console.log("🔄 日付が変わったため、デイリーチャレンジをリセットします");
+      cached.dailyChallenge = { completed: {} };
+    }
+    cached.lastLoginDate = new Date().toISOString();
+    return cached;
+  }
+  // キャッシュがない場合はデフォルト値を返す
+  return { name: "プレイヤー", level: 1, exp: 0, totalExp: 0 };
+};
+
+// 旧API: clearPlayer → clearLocalCache
+export const clearPlayer = clearLocalCache;
+
+// ===== Firestore関連（信頼できるデータソース） =====
+
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+
+// undefinedのプロパティを除外するヘルパー関数
+// Firestoreはundefined値をサポートしていないため、保存前に除外する必要がある
+const removeUndefinedFields = <T extends object>(obj: T): Partial<T> => {
+  const result: Partial<T> = {};
+  for (const key of Object.keys(obj) as Array<keyof T>) {
+    if (obj[key] !== undefined) {
+      result[key] = obj[key];
+    }
+  }
+  return result;
+};
+
+// デフォルトのプレイヤーデータ
+const getDefaultPlayerData = (): PlayerData => ({
+  name: "プレイヤー",
+  level: 1,
+  exp: 0,
+  totalExp: 0,
+  dailyChallenge: { completed: {} },
+  lastLoginDate: new Date().toISOString(),
+});
 
 // Firestoreからプレイヤーデータを読み込む
 export const loadPlayerFromFirestore = async (
@@ -111,7 +156,7 @@ export const loadPlayerFromFirestore = async (
 
     const data = userDoc.data();
     if (!validatePlayerData(data)) {
-      console.log("📭 Player data in Firestore is incomplete or invalid, will use local data:", data);
+      console.log("📭 Player data in Firestore is incomplete or invalid:", data);
       return null;
     }
 
@@ -123,28 +168,58 @@ export const loadPlayerFromFirestore = async (
   }
 };
 
-// Firestoreとローカルを同期（Firestoreを優先）
+// Firestoreとローカルを同期（Firestoreを唯一の真実の源として使用）
+// ※ローカルストレージの改ざんを防ぐため、常にFirestoreを優先
 export const syncPlayerData = async (uid: string): Promise<PlayerData> => {
   try {
     const firestoreData = await loadPlayerFromFirestore(uid);
     
     if (firestoreData) {
-      // Firestoreにデータがある場合はそれを使う
-      savePlayer(firestoreData);
-      console.log("🔄 Synced local storage with Firestore data");
-      return firestoreData;
+      // Firestoreにデータがある場合、それを唯一の真実として使用
+      // デイリーチャレンジのリセット判定
+      let updatedData = { ...firestoreData };
+      
+      if (shouldResetDailyChallenge(firestoreData.lastLoginDate)) {
+        console.log("🔄 日付が変わったため、デイリーチャレンジをリセットします");
+        updatedData = {
+          ...updatedData,
+          dailyChallenge: { completed: {} },
+          lastLoginDate: new Date().toISOString(),
+        };
+        // リセットした状態をFirestoreに保存
+        await savePlayerToFirestore(uid, updatedData);
+      } else {
+        // 最終ログイン日時のみ更新
+        updatedData.lastLoginDate = new Date().toISOString();
+      }
+      
+      // ローカルキャッシュを更新（表示高速化用）
+      saveLocalCache(updatedData);
+      console.log("🔄 Synced: Firestore → Local cache");
+      return updatedData;
     }
     
-    // Firestoreにデータがない場合はローカルを使う
-    const localData = loadPlayer();
-    // ローカルデータをFirestoreに保存
-    await savePlayerToFirestore(uid, localData);
-    console.log("⬆️ Uploaded local data to Firestore");
-    return localData;
+    // Firestoreにデータがない場合（新規ユーザー）
+    // ※改ざん防止のため、ローカルデータは使用せず、デフォルト値で初期化
+    console.log("🆕 New user detected, initializing with default data");
+    const defaultData = getDefaultPlayerData();
+    
+    // Firestoreに初期データを保存
+    await savePlayerToFirestore(uid, defaultData);
+    // ローカルキャッシュも更新
+    saveLocalCache(defaultData);
+    
+    return defaultData;
   } catch (err) {
     console.error("❌ Failed to sync player data:", err);
-    // フォールバック：ローカルデータを返す
-    return loadPlayer();
+    // エラー時はローカルキャッシュを返すが、これは信頼できないので注意
+    // オフライン使用を許可する場合のフォールバック
+    const cached = loadLocalCache();
+    if (cached) {
+      console.warn("⚠️ Using local cache as fallback (may be stale or tampered)");
+      return cached;
+    }
+    return getDefaultPlayerData();
   }
 };
 
@@ -163,8 +238,14 @@ export const savePlayerToFirestore = async (
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       const userRef = doc(db, "users", uid);
-      await setDoc(userRef, { ...player }, { merge: true });
+      // undefinedのプロパティを除外してからFirestoreに保存
+      const cleanedPlayer = removeUndefinedFields(player);
+      await setDoc(userRef, cleanedPlayer, { merge: true });
       console.log(`✅ Player saved to Firestore (attempt ${attempt + 1})`);
+      
+      // Firestore保存成功時、ローカルキャッシュも更新
+      saveLocalCache(player);
+      
       return true;
     } catch (err) {
       console.error(`❌ Failed to save player to Firestore (attempt ${attempt + 1}):`, err);

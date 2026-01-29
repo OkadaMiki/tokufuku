@@ -1,173 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Footer from "@/components/layout/FooterNav";
 import LoadingMessage from "@/components/ui/LoadingMessage";
-import { type Category, TOKU_CATEGORIES } from "@/constants/categories";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
-import { db } from "@/lib/firebase";
-import { addDoc, collection, getCountFromServer, query, serverTimestamp, where } from "firebase/firestore";
-import {
-  completeDailyChallenge,
-  loadBuffer,
-  loadPlayer,
-  saveBuffer,
-  savePlayer,
-  savePlayerToFirestore,
-} from "@/lib/level";
-import { getBusinessDate } from "@/lib/level/dateUtils";
-import type { PlayerData } from "@/lib/playerData";
+import { useFortuneGame } from "@/hooks/fortune/useFortuneGame";
+import FortuneCardSelector from "@/components/features/fortune/FortuneCardSelector";
+import FortuneResult from "@/components/features/fortune/FortuneResult";
+
 import styles from "./page.module.css";
-import { useRouter } from "next/navigation";
 
 export default function FortunePage() {
   const { user, loading } = useAuthGuard({ requireLogin: true });
-  const [player, setPlayer] = useState<PlayerData | null>(null);
-  const [revealed, setRevealed] = useState(false);
-  const [fortuneCategory, setFortuneCategory] = useState<Category | null>(null);
-  const [selectedCard, setSelectedCard] = useState<number | null>(null);
-  const [isDataLoading, setIsDataLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (!loading && user?.uid) {
-        setIsDataLoading(true);
-        
-        // Firestoreとローカルストレージを同期
-        const { syncPlayerData } = await import("@/lib/level");
-        const p = await syncPlayerData(user.uid);
-        
-        setPlayer(p);
-
-        const today = getBusinessDate(new Date());
-        if (p.fortune && p.fortune.lastFortuneDate === today) {
-          // Already drawn today
-          const found = TOKU_CATEGORIES.find(
-            (c) => c.key === p.fortune?.categoryKey,
-          );
-          if (found) {
-            setFortuneCategory(found);
-            setRevealed(true);
-          }
-        }
-        
-        setIsDataLoading(false);
-      }
-    };
-    
-    loadData();
-  }, [loading, user]);
-
-  const handleCardSelect = (cardIndex: number) => {
-    if (revealed) return;
-    setSelectedCard(cardIndex);
-  };
-
-  const handleConfirm = async () => {
-    if (!player || revealed || selectedCard === null) return;
-
-    // Filter out "Other" categories
-    // Filter out "Other" categories
-    const validCategories = TOKU_CATEGORIES.filter(
-      (c) => !c.label.includes("その他") && !c.key.endsWith("other"),
-    );
-
-    const randomCat =
-      validCategories[Math.floor(Math.random() * validCategories.length)];
-    const today = getBusinessDate(new Date());
-
-    // Calculate toku count for this category
-    let tokuCount = 0;
-    if (user?.uid) {
-      try {
-        const recordsRef = collection(db, "users", user.uid, "records");
-        const q = query(
-          recordsRef,
-          where("category", "==", randomCat.key) 
-        );
-        // Note: We now save keys, so we query keys. Old records with labels will not be counted.
-        
-        const q2 = query(recordsRef, where("category", "==", randomCat.key)); 
-        const snapshot = await getCountFromServer(q2);
-        tokuCount = snapshot.data().count;
-      } catch (e) {
-        console.error("Failed to count toku records", e);
-      }
-    }
-
-    // tokuCount calculation (unchanged logic)
-    // ...
-
-    // Save fortune history to separate 'fortunes' collection
-    if (user?.uid) {
-      try {
-        const fortunesRef = collection(db, "users", user.uid, "fortunes");
-        addDoc(fortunesRef, {
-           result: randomCat.label,
-           categoryKey: randomCat.key,
-           date: today,
-           tokuCount: tokuCount,
-           createdAt: serverTimestamp(),
-        });
-      } catch (e) {
-        console.error("Failed to save fortune history", e);
-      }
-    }
-
-    const updatedPlayer: PlayerData = {
-      ...player,
-      fortune: {
-        lastFortuneDate: today,
-        categoryLabel: randomCat.label,
-        categoryKey: randomCat.key,
-      },
-    };
-
-    // ★ バッファ保存ロジック (Data B)
-    // まだバッファがない場合のみ、現在の状態（経験値加算前）を保存する
-    // これにより、Homeに戻ったときに「加算前 -> 加算後」のアニメーションが可能になる
-    const existingBuffer = loadBuffer();
-    if (!existingBuffer) {
-      // 経験値加算前の状態を保存するが、タスクは「完了済」として見せる
-      // これによりHomeに戻った瞬間にタスク完了バッジが表示され、
-      // その後ゲージが伸びるアニメーションが行われる
-      const bufferedPlayer: PlayerData = {
-        ...updatedPlayer,
-        dailyChallenge: {
-          ...updatedPlayer.dailyChallenge,
-          completed: {
-            ...updatedPlayer.dailyChallenge?.completed,
-            uranai: true,
-          },
-        },
-      };
-      saveBuffer(bufferedPlayer); 
-    }
-
-    // Complete challenge (経験値加算)
-    const finalPlayer = completeDailyChallenge(updatedPlayer, "uranai");
-    
-    // Firestoreへ保存を試みる
-    if (user?.uid) {
-      const saveSuccess = await savePlayerToFirestore(user.uid, finalPlayer);
-      
-      if (saveSuccess) {
-        // Firestore保存成功時のみローカルに保存してUIを更新
-        savePlayer(finalPlayer);
-        setPlayer(finalPlayer);
-        setFortuneCategory(randomCat);
-        setRevealed(true);
-      } else {
-        // 保存失敗時はエラーを表示（UIは更新しない）
-        console.error("⚠️ 占い結果の保存に失敗しました");
-        alert("占い結果の保存に失敗しました。もう一度お試しください。");
-      }
-    } else {
-      // ログインしていない場合（本来は起きないはず）
-      console.error("⚠️ ユーザーがログインしていません");
-    }
-  };
+  const {
+    player,
+    revealed,
+    fortuneCategory,
+    selectedCard,
+    isDataLoading,
+    handleCardSelect,
+    handleConfirm,
+  } = useFortuneGame(user, loading);
 
   if (loading || isDataLoading || !player) return <LoadingMessage />;
 
@@ -176,63 +31,17 @@ export default function FortunePage() {
       <h1 className={styles.title}>今日の運勢</h1>
 
       {!revealed ? (
-        <>
-          <div className={styles.cardContainer}>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <button
-                type="button"
-                key={i}
-                className={`${styles.card} ${selectedCard === i ? styles.selected : ""}`}
-                onClick={() => handleCardSelect(i)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") handleCardSelect(i);
-                }}
-              >
-                
-              </button>
-            ))}
-          </div>
-          {selectedCard !== null && (
-            <button
-              type="button"
-              className={styles.confirmButton}
-              onClick={handleConfirm}
-            >
-              これにする
-            </button>
-          )}
-        </>
+        <FortuneCardSelector
+          selectedCard={selectedCard}
+          onSelect={handleCardSelect}
+          onConfirm={handleConfirm}
+        />
       ) : (
-        <div className={styles.resultOverlay}>
-          <div className={styles.resultCard}>
-            <div className={styles.cardContent}>
-              <p className={styles.resultTitle}>今日のラッキーカテゴリ</p>
-              <div className={styles.categoryName}>{fortuneCategory?.label}</div>
-              <div className={styles.divider}></div>
-              <p className={styles.bonusText}>
-                このカテゴリで記録すると<br />
-                経験値<span className={styles.highlight}>2倍</span>！
-              </p>
-            </div>
-            
-            <div className={styles.buttonGroup}>
-              <button
-                type="button"
-                className={styles.actionButton}
-                onClick={() => router.push("/record")}
-              >
-                いますぐ記録する
-              </button>
-              <button
-                type="button"
-                className={styles.textButton}
-                onClick={() => router.push("/home")}
-              >
-                ホームに戻る
-              </button>
-            </div>
-          </div>
-        </div>
+        <FortuneResult
+          categoryLabel={fortuneCategory?.label}
+          onRecord={() => router.push("/record")}
+          onHome={() => router.push("/home")}
+        />
       )}
 
       <Footer />

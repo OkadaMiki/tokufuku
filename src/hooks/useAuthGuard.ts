@@ -3,7 +3,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase";
-import { clearPlayer, savePlayer, syncPlayerData } from "@/lib/level/storage";
+import { syncPlayerData } from "@/lib/level/storage";
 import { validatePlayerData } from "@/lib/playerData";
 
 export function useAuthGuard({
@@ -38,11 +38,8 @@ export function useAuthGuard({
 
       if (u) {
         try {
-          // ログイン時（初期ロード時）に一度ローカルをクリアして整合性を担保
-          // 新しいsyncPlayerData関数を使用してFirestoreと同期
-          clearPlayer();
-
-          // Firestoreと同期（Firestoreを優先）
+          // Firestoreと同期（Firestoreが唯一の真実の源）
+          // syncPlayerDataは常にFirestoreを優先するため、キャッシュクリアは不要
           const playerData = await syncPlayerData(u.uid);
           
           setUser({

@@ -1,0 +1,64 @@
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.card {
+  width: 90px;
+  height: 120px;
+  background: 
+    url('/assets/card/card_back.svg') no-repeat center center,
+    #fff;
+  background-size: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  box-shadow:  0 0 8px rgba(148, 234, 20, 0.5);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card.selected {
+  transform: scale(1.1) translateY(-10px);
+  box-shadow: 0 0 20px rgba(148, 234, 20, 0.9);
+}
+
+.confirmButton {
+  padding: 12px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: 3px solid #667eea;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.confirmButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.confirmButton:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
