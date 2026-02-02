@@ -74,6 +74,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    text-align: left;
     gap: 12px;
     background: #fff;
     border-radius: 14px;
@@ -82,10 +83,16 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
+  .card:focus-visible {
+    outline: 3px solid #1A73E8;
+    outline-offset: 2px;
+  }
+
   .cardLabel {
     flex: 1;
     width: 144px;
     font-size: 14px;
+    text-align: left;
     color: var(--color--brown);
     font-weight: 500;
     white-space: nowrap;
@@ -149,9 +156,12 @@
   .playIcon {
     width: 0;
     height: 0;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-left: 11px solid #89574B;
+    position: absolute;
+    top: calc((26px - 16px) / 2);
+    right: calc((58px - 16px) / 2);
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid #89574B;
   }
 
   .smallBtn:hover {
@@ -192,4 +202,9 @@
 
 .closeBtn:hover {
   filter: brightness(0.98);
+}
+
+.closeBtn:focus-visible {
+  outline: 3px solid #1A73E8;
+  outline-offset: 2px;
 }

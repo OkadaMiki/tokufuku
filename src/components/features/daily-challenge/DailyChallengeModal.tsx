@@ -1,6 +1,6 @@
 "use client";
 
-
+import { useEffect, useId, useRef } from "react";
 import type { ChallengeId, DailyChallengeState } from "@/lib/playerData";
 import styles from "./DailyChallengeModal.module.css";
 
@@ -23,13 +23,17 @@ export default function DailyChallengeModal({
   state,
 }: Props) {
   if (!open) return null;
+  const headingId = useId();
 
   const completed = state?.completed || {};
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
 
   // ① 追記：ベース3つの達成数を数える
   const baseIds: ChallengeId[] = ["feed", "uranai", "record"];
   const doneCount = baseIds.filter((id) => completed[id]).length;
   const metaDone = doneCount >= 3;
+
 
   // ② 追記：未達のとき、次に誘導すべきチャレンジを決める（優先順は自由に調整OK）
   const goNextIncomplete = () => {
@@ -38,21 +42,56 @@ export default function DailyChallengeModal({
     if (completed.record !== true && onGoRecord) return onGoRecord();
   };
 
+  // アクセシビリティ・キーボードフォーカス
+  useEffect(() => {
+    const prevActive = document.activeElement as HTMLElement | null;
+    const prevOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+
+    queueMicrotask(() => {
+      // 優先：閉じるボタン
+      if (closeBtnRef.current) {
+        closeBtnRef.current.focus();
+        return;
+      }
+
+      // 保険：dialog自身
+      dialogRef.current?.focus();
+    });
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      prevActive?.focus();
+    };
+  }, [onClose]);
+
+
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: modal backdrop
     <div
       className={styles.backdrop}
       onClick={onClose}
-      aria-modal="true"
-      role="dialog"
+
     >
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: modal panel */}
       <div
         className={styles.panel}
         onClick={(e) => e.stopPropagation()}
-        role="document"
+        aria-modal="true"
+        role="dialog"
+        aria-labelledby={headingId}
       >
-        <h2 className={styles.headingBadge}>まいにちチャレンジ</h2>
+        <h2 className={styles.headingBadge} id="headingId">まいにちチャレンジ</h2>
 
         <div className={styles.panelInner}>
 
@@ -100,40 +139,25 @@ type RowProps = {
 };
 
 function ChallengeRow({ label, done, onAction }: RowProps) {
-  const clickable = !done && !!onAction;
+  const disabled = done || !onAction;
 
   return (
-    <div
-      className={`${styles.card} ${done ? styles.cardDone : ""} ${clickable ? styles.cardClickable : ""}`}
-      onClick={clickable ? onAction : undefined}
-      role={clickable ? "button" : undefined}
-      tabIndex={clickable ? 0 : -1}
-      aria-disabled={!clickable}
-      onKeyDown={(e) => {
-        if (!clickable) return;
-        if (e.key === "Enter" || e.key === " ") onAction?.();
-      }}
+    <button
+      type="button"
+      className={`${styles.card} ${done ? styles.cardDone : ""}`}
+      onClick={disabled ? undefined : onAction}
+      disabled={disabled}
+      aria-label={done ? `${label}（完了）` : `${label}へ進む`}
     >
-      <div className={styles.cardLabel}>{label}</div>
+      <span className={styles.cardLabel}>{label}</span>
 
       {done ? (
         <span className={styles.doneBadge}>完了</span>
       ) : (
-        <button
-          type="button"
-          className={styles.smallBtn}
-          onClick={(e) => {
-            e.stopPropagation();
-            onAction?.();
-          }}
-          disabled={!clickable}
-          aria-disabled={!clickable}
-          title="進む"
-        >
-          <span className={styles.playIcon} aria-hidden="true" />
-        </button>
+        <span className={styles.smallBtn} aria-hidden="true">
+          <span className={styles.playIcon} />
+        </span>
       )}
-    </div>
+    </button>
   );
 }
-
