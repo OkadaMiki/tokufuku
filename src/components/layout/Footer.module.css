@@ -3,31 +3,73 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 10px 16px;
+  box-sizing: border-box;
+  padding: 8px 16px;
   background: var(--color--pinkbrown);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 900;
+}
+
+.list {
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .box {
   width: 64px;
-  height: 60px;
+  height: 56px;
   border-radius: 8px;
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 4px;
   transition: background 0.2s;
   color: #fff;
   text-decoration: none;
-
-  span {
-    font-size: 13px;
-    line-height: 16px;
-  }
 }
 
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.label {
+  font-size: 13px;
+  line-height: 16px;
+
+}
+
+/* hover */
 .box:hover {
   background: var(--color--darkpinkbrown);
+}
+
+.box:active {
+  transform: translateY(1px);
+}
+
+/* キーボード操作で必須 */
+.box:focus-visible {
+  outline: 3px solid var(--color--brown);
+  outline-offset: 0px;
+}
+
+/* 現在ページ（aria-current="page"） */
+.box[aria-current="page"] {
+  background: var(--color--darkpinkbrown);
+}
+
+/* 現在ページの“強調”をもう少し出したいなら */
+.box[aria-current="page"] .label {
+  font-weight: 500;
 }
