@@ -64,6 +64,15 @@
   outline-offset: 0px;
 }
 
+.box:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: 3px solid var(--color--cocoabrown);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
 /* 現在ページ（aria-current="page"） */
 .box[aria-current="page"] {
   background: var(--color--darkpinkbrown);
