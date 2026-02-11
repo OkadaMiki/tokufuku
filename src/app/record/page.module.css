@@ -2,7 +2,8 @@
   width: 100%;
   display: grid;
   gap: 12px;
-  background-color: var(--color--back);
+
+  /* padding: var(--gutter); */
 }
 
 .header {
@@ -62,8 +63,6 @@
   padding: 8px;
   display: grid;
   gap: 10px;
-  background-color: var(--color--back);
-
 }
 
 .label {
