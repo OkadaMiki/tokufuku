@@ -15,7 +15,7 @@ export default function LoadingMessage({
         width={56}
         height={56}
         className={styles.charImage}
-      /><br />
+      />
       <p className="p-4 text-gray-500 animate-pulse text-center">{text}</p>
     </div>
   );

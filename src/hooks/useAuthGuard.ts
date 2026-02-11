@@ -9,9 +9,11 @@ import { validatePlayerData } from "@/lib/playerData";
 export function useAuthGuard({
   requireLogin = false,
   redirectTo = "/home",
+  redirectIfLoggedIn = true,
 }: {
   requireLogin?: boolean;
   redirectTo?: string;
+  redirectIfLoggedIn?: boolean;
 }) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ export function useAuthGuard({
         return;
       }
 
-      if (!requireLogin && u) {
+      if (!requireLogin && u && redirectIfLoggedIn) {
         router.push(redirectTo);
         setLoading(false);
         return;
