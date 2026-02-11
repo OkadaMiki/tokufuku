@@ -77,12 +77,12 @@ export default function RecordPage() {
           ]}
           value={type}
           onChange={(val) => setType(val as TypeKind)}
-          className={styles.fullWidthTab}
+          className={`{styles.fullWidthTab} & {styles.selectTab} `}
         />
       </header>
 
       {/* 日付 */}
-      <section className={styles.panel}>
+      <section className={` {styles.panel} & {styles.row} `}>
         <label className={styles.label} htmlFor="date-input">
           日付
         </label>
