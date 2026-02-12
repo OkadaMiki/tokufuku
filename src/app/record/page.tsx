@@ -10,16 +10,14 @@ import BoxTabSelector from "@/components/ui/BoxTabSelector";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useRecordForm, type TypeKind } from "@/hooks/record/useRecordForm";
 import { findLabelByKey } from "@/constants/categories";
+import MessageModal from "@/components/ui/MessageModal";
 
 import styles from "./page.module.css";
 
-// コンポーネント本体
 export default function RecordPage() {
-  // ログイン処理
   const { user, loading } = useAuthGuard({ requireLogin: true });
   const [isDataLoading, setIsDataLoading] = useState(true);
 
-  // Firestoreと同期
   useEffect(() => {
     const syncData = async () => {
       if (!loading && user?.uid) {
@@ -31,7 +29,6 @@ export default function RecordPage() {
     syncData();
   }, [loading, user]);
 
-  // フォームロジック
   const {
     type,
     setType,
@@ -49,14 +46,37 @@ export default function RecordPage() {
     handleSubmit,
   } = useRecordForm(user);
 
-  // 「その他」選択時にここへフォーカス
   const memoRef = useRef<HTMLTextAreaElement | null>(null);
 
+  // ✅ モーダル用 state は早期 return より上に置く
+  const [messageOpen, setMessageOpen] = useState(false);
+  const [messageTitle, setMessageTitle] = useState("");
+  const [messageBody, setMessageBody] = useState("");
+  const [messageVariant, setMessageVariant] = useState<"success" | "error">("success");
+
+  // ✅ 保存クリック処理を定義
+  const onClickSave = async () => {
+    const result = await handleSubmit();
+
+    setMessageTitle(result.ok ? "記録完了！" : "記録を失敗！");
+    setMessageBody(result.message);
+    setMessageVariant(result.ok ? "success" : "error");
+    setMessageOpen(true);
+  };
+
+  // ✅ 早期 return は Hook の後に置く
   if (loading || isDataLoading) return <LoadingMessage />;
 
   return (
     <div className={styles.page}>
-      {/* ヘッダ */}
+      <MessageModal
+        open={messageOpen}
+        title={messageTitle}
+        message={messageBody}
+        variant={messageVariant}
+        onClose={() => setMessageOpen(false)}
+      />
+
       <header className={styles.header}>
         <div className={styles.head}>
           <div className={styles.pageName}>
@@ -68,6 +88,7 @@ export default function RecordPage() {
             />
           </div>
         </div>
+
         <BoxTabSelector
           options={[
             { label: "🌿 徳", value: "toku" },
@@ -75,12 +96,11 @@ export default function RecordPage() {
           ]}
           value={type}
           onChange={(val) => setType(val as TypeKind)}
-          className={`${styles.fullWidthTab} ${styles.selectTab} `}
+          className={`${styles.fullWidthTab} ${styles.selectTab}`}
         />
       </header>
 
       <div className={styles.main}>
-        {/* 日付 */}
         <section className={`${styles.panel} ${styles.row} ${styles.date}`}>
           <label className={`${styles.label} ${styles.dateTitle}`} htmlFor="date-input">
             日付
@@ -94,7 +114,6 @@ export default function RecordPage() {
           />
         </section>
 
-        {/* カテゴリ → 横スワイプでサブ選択 */}
         <section className={`${styles.panel} ${styles.category}`}>
           <CategorySwiper
             parents={tree as any}
@@ -107,7 +126,6 @@ export default function RecordPage() {
           </p>
         </section>
 
-        {/* 詳細メモ（任意） */}
         <section className={`${styles.panel} ${styles.note}`}>
           <label className={`${styles.label} ${styles.noteTitle}`} htmlFor="memo-input">
             備考（任意）
@@ -123,19 +141,18 @@ export default function RecordPage() {
           />
         </section>
 
-        {/* アクション */}
         <section className={`${styles.actionRow} ${styles.save}`}>
           <button
             type="button"
             className={styles.primaryBtn}
-            onClick={handleSubmit}
+            onClick={onClickSave}
             disabled={!canSubmit || saving}
           >
             {saving ? "保存中…" : "記録"}
           </button>
-          {msg && <span className={styles.msg}>{msg}</span>}
         </section>
       </div>
+
       <Footer />
     </div>
   );

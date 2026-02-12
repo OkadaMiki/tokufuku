@@ -13,7 +13,11 @@ import {
 } from "@/lib/level";
 import { GOOD_CATEGORIES, TOKU_CATEGORIES } from "@/constants/categories";
 
-const POINTS = { toku: 10, good: 6 } as const;
+const POINTS = {
+  toku: 10,
+  good: 6,
+} as const;
+
 export type TypeKind = keyof typeof POINTS;
 
 function todayISO() {
@@ -32,20 +36,28 @@ function showStatus(player: any) {
   console.log("=========================");
 }
 
+export type SubmitResult =
+  | {
+    ok: true;
+    message: string;
+  }
+  | {
+    ok: false;
+    message: string;
+  };
+
 export function useRecordForm(user: any) {
   const [type, setType] = useState<TypeKind>("toku");
   const [dateStr, setDateStr] = useState(todayISO());
-  const [category, setCategory] = useState(""); // 大カテゴリ
-  const [sub, setSub] = useState(""); // サブカテゴリ
+  const [category, setCategory] = useState("");
+  const [sub, setSub] = useState("");
   const [memo, setMemo] = useState("");
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
 
-  // 将来：type が "good" のときは GOOD_TREE に入れ替える想定
-  const tree = useMemo(
-    () => (type === "toku" ? TOKU_CATEGORIES : GOOD_CATEGORIES),
-    [type],
-  );
+  const tree = useMemo(() => {
+    return type === "toku" ? TOKU_CATEGORIES : GOOD_CATEGORIES;
+  }, [type]);
 
   const canSubmit = !!(type && dateStr && (sub || category));
 
@@ -58,23 +70,36 @@ export function useRecordForm(user: any) {
     setDateStr(todayISO());
   };
 
-  const handleSubmit = async () => {
-    if (!canSubmit || saving) return;
+  const handleSubmit = async (): Promise<SubmitResult> => {
+    if (!canSubmit) {
+      return {
+        ok: false,
+        message: "カテゴリを選んでください。",
+      };
+    }
+
+    if (!user?.uid) {
+      return {
+        ok: false,
+        message: "ログイン状態を確認してください。",
+      };
+    }
+
     setSaving(true);
     setMsg("");
+
     try {
       const occurred = new Date(dateStr);
-      if (!user) {
-        setMsg("ログイン状態を確認してください");
-        setSaving(false);
-        return;
-      }
 
       // Firestoreから最新のプレイヤーデータを取得（改ざん防止）
       let player = await loadPlayerFromFirestore(user.uid);
       if (!player) {
-        // 新規ユーザーの場合はデフォルト値を使用
-        player = { name: "プレイヤー", level: 1, exp: 0, totalExp: 0 };
+        player = {
+          name: "プレイヤー",
+          level: 1,
+          exp: 0,
+          totalExp: 0,
+        };
       }
 
       const businessDate = getBusinessDate(new Date());
@@ -82,12 +107,10 @@ export function useRecordForm(user: any) {
       const isBonus =
         player.fortune &&
         player.fortune.lastFortuneDate === businessDate &&
-        (
-          player.fortune.categoryKey === category ||
-          player.fortune.categoryLabel === category
-        );
+        (player.fortune.categoryKey === category ||
+          player.fortune.categoryLabel === category);
 
-      // まずFirestoreにレコードを保存
+      // レコード保存
       const userRecordsRef = collection(db, "users", user.uid, "records");
       await addDoc(userRecordsRef, {
         type,
@@ -100,32 +123,47 @@ export function useRecordForm(user: any) {
         createdAt: serverTimestamp(),
       });
 
-      // アニメーション用バッファを保存（経験値加算前の状態）
+      // バッファ（経験値加算前）を保存
       const existingBuffer = loadBuffer();
       if (!existingBuffer) {
         saveBuffer(player);
       }
 
+      // 経験値・デイリーチャレンジ更新
       player = addExp(player, category);
       player = completeDailyChallenge(player, "record");
 
-      // Firestoreに保存（成功した場合のみローカルキャッシュも更新される）
+      // プレイヤーデータ保存
       const saveSuccess = await savePlayerToFirestore(user.uid, player);
 
-      if (saveSuccess) {
-        showStatus(player);
-        setMsg(`保存しました！ +${category}で経験値獲得`);
-        setMemo("");
-        setSub("");
-      } else {
-        console.error(
-          "⚠️ Firestore保存失敗のため、ローカルデータは更新されませんでした",
-        );
+      if (!saveSuccess) {
         setMsg("保存に失敗しました。もう一度お試しください。");
+        return {
+          ok: false,
+          message: "保存に失敗しました。もう一度お試しください。",
+        };
       }
+
+      showStatus(player);
+
+      setMsg(`保存しました！ +${category}で経験値獲得`);
+      setMemo("");
+      setSub("");
+      setCategory("");
+
+      return {
+        ok: true,
+        message: "良いことが起こりますように",
+      };
     } catch (e) {
       console.error(e);
-      setMsg("保存に失敗しました");
+
+      setMsg("保存に失敗しました。通信環境を確認してもう一度お試しください。");
+
+      return {
+        ok: false,
+        message: "保存に失敗しました。通信環境を確認してもう一度お試しください。",
+      };
     } finally {
       setSaving(false);
     }
