@@ -13,8 +13,8 @@ type Props = {
   onPick: (parentKey: string, childKey: string) => void;
   // 備考欄へフォーカス（RefObject/MutableRefObject のいずれも可）
   memoRef?:
-    | React.RefObject<HTMLTextAreaElement | null>
-    | React.MutableRefObject<HTMLTextAreaElement | null>;
+  | React.RefObject<HTMLTextAreaElement | null>
+  | React.MutableRefObject<HTMLTextAreaElement | null>;
 };
 
 const OTHER_LABEL = "その他";
@@ -136,7 +136,7 @@ export default function CategorySwiper({ parents, onPick, memoRef }: Props) {
             {parents.map((p) => {
               const isActive =
                 selected.parentKey === p.key || activeParent?.key === p.key;
-              const wide = p.label === "その他"; // ← 親“その他”だけ横幅フル
+              const wide = p.label === "その他(入力)"; // ← 親“その他”だけ横幅フル
               return (
                 <li key={p.key} className={wide ? styles.full : undefined}>
                   <button

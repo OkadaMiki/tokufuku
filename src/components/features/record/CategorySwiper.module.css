@@ -46,11 +46,13 @@
   /* 高めに固定 */
   padding: 8px;
   border: none;
-  border-radius: 20px;
-  background: #8d8d8d;
-  color: #ffffff;
+  border-radius: 10px;
+  background-color: var(--color--white);
+  color: var(--color--font--black);
+  border: solid 3px var(--color--brown);
+  box-shadow: inset 0px -4px var(--color--buttonwhite--shadow);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.2;
   text-align: center;
   word-break: keep-all;
@@ -74,13 +76,11 @@
   justify-content: center;
   width: 100%;
   min-height: 40px;
-  padding: 8px;
-  border: none;
-  border-radius: 20px;
-  background: #5c5c5c;
-  color: #ffffff;
+  border-radius: 10px;
+  background: var(--color--buttonwhite--shadow);
+  color: var(--color--font--black);
+  border: solid 3px var(--color--brown);
   font-size: 14px;
-  font-weight: 800;
   line-height: 1.2;
   text-align: center;
   word-break: keep-all;
@@ -96,19 +96,19 @@
 .backBtn {
   appearance: none;
   padding: 6px 10px;
-  border: 1px solid #d1d5db;
+  border: 2px solid var(--color--brown);
   border-radius: 8px;
   background: #ffffff;
-  color: #111111;
+  color: var(--color--font--black);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   cursor: pointer;
 }
 
 .parentTitle {
   margin: 0;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   color: #222222;
 }
 

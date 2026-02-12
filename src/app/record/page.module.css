@@ -1,9 +1,6 @@
 .page {
   width: 100%;
   display: grid;
-  gap: 12px;
-
-  /* padding: var(--gutter); */
 }
 
 .header {
@@ -56,13 +53,19 @@
   border-color: #111827;
 }
 
+.main {
+  height: calc(100vh - 88px - 44px - 72px);
+  padding: 24px;
+  background-color: var(--color--back);
+}
+
 .panel {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   padding: 8px;
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .label {
@@ -70,6 +73,37 @@
   font-weight: 600;
   color: #374151;
 }
+
+.date {
+  height: 56px;
+  align-items: center;
+  background-color: var(--color--back--cocoa);
+  border: solid 3px var(--color--border--cocoa);
+  margin-bottom: 16px;
+
+  label {
+    display: inline-block;
+    width: 2rem;
+    color: var(--color--white);
+    font-size: 16px;
+    line-height: 56px;
+    margin: 0 24px;
+  }
+
+  input {
+    display: inline-block;
+    width: calc(100% - 32px - 10px - 48px);
+  }
+}
+
+
+.category {
+  padding: 8px 16px;
+  background-color: var(--color--back--brown);
+  border: solid 3px var(--color--border--brown);
+  margin-bottom: 16px;
+}
+
 
 .row {
   display: flex;
@@ -89,6 +123,21 @@
   width: 100%;
   resize: vertical;
   min-height: 96px;
+}
+
+.note {
+  background-color: var(--color--back--cocoa);
+  border: solid 3px var(--color--border--cocoa);
+  padding: 8px 16px 16px;
+
+  label {
+    color: var(--color--white);
+    font-size: 16px;
+  }
+
+  textarea {
+    border: none;
+  }
 }
 
 .primaryBtn {
@@ -118,6 +167,8 @@
 .hint {
   font-size: 12px;
   color: #6b7280;
+  margin-top: 0;
+  margin-bottom: 8px;
 }
 
 .actionRow {
@@ -125,7 +176,18 @@
   gap: 10px;
   justify-content: center;
   align-items: center;
-  opacity: 1;
+  margin-top: 16px;
+}
+
+.save {
+  .primaryBtn {
+    width: 120px;
+    height: 48px;
+    border-radius: 20px;
+    background-color: var(--color--button--main);
+    box-shadow: inset 0px -5px var(--color--button--shadow);
+    font-weight: 500;
+  }
 }
 
 .msg {

@@ -11,7 +11,7 @@ export type Category = {
 };
 
 // 子カテゴリ側の「その他」判定で使う表示ラベル
-export const OTHER_CHILD_LABEL = "その他" as const;
+export const OTHER_CHILD_LABEL = "その他(入力)" as const;
 
 // とくつみ（徳）カテゴリ
 export const TOKU_CATEGORIES: Category[] = [
@@ -20,7 +20,7 @@ export const TOKU_CATEGORIES: Category[] = [
     label: "思いやり系",
     exp: 30,
     children: [
-      { key: "toku_01_01", label: "困っている人を助けた" },
+      { key: "toku_01_01", label: "人を助けた" },
       { key: "toku_01_02", label: "人を励ました" },
       { key: "toku_01_03", label: "愚痴に付き合った" },
       { key: "toku_01_other", label: OTHER_CHILD_LABEL },

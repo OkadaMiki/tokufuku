@@ -36,11 +36,16 @@ body {
   --color--cocoabrown: #9C7C74;
   --color--white: #FFFFFF;
   --color--back: #ffd894;
+  --color--back--cocoa: #B17E72;
+  --color--back--brown: #E6C17E;
+  --color--border--cocoa: #855D54;
+  --color--border--brown: #CE9733;
   --color--font--black: #50342E;
   --color--button--main: #F6BF6E;
   --color--button--shadow: #E4A344;
   --color--buttongrey--main: #CCCCCC;
   --color--buttongrey--shadow: #9A9797;
+  --color--buttonwhite--shadow: #CFDEE2;
   --color--badge--main: #FFDC5E;
   --color--badge--shadow: #E7B811;
 

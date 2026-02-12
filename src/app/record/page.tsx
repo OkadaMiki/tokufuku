@@ -47,7 +47,6 @@ export default function RecordPage() {
     tree,
     canSubmit,
     handlePick,
-    handleSetToday,
     handleSubmit,
   } = useRecordForm(user);
 
@@ -77,16 +76,16 @@ export default function RecordPage() {
           ]}
           value={type}
           onChange={(val) => setType(val as TypeKind)}
-          className={`{styles.fullWidthTab} & {styles.selectTab} `}
+          className={`${styles.fullWidthTab} & ${styles.selectTab} `}
         />
       </header>
 
-      {/* 日付 */}
-      <section className={` {styles.panel} & {styles.row} `}>
-        <label className={styles.label} htmlFor="date-input">
-          日付
-        </label>
-        <div className={styles.row}>
+      <div className={styles.main}>
+        {/* 日付 */}
+        <section className={`${styles.panel} & ${styles.row} & ${styles.date}`}>
+          <label className={`${styles.label} & ${styles.dateTitle}`} htmlFor="date-input">
+            日付
+          </label>
           <input
             id="date-input"
             type="date"
@@ -94,57 +93,50 @@ export default function RecordPage() {
             onChange={(e) => setDateStr(e.target.value)}
             className={styles.input}
           />
+        </section>
+
+        {/* カテゴリ → 横スワイプでサブ選択 */}
+        <section className={`${styles.panel} & ${styles.category}`}>
+          <CategorySwiper
+            parents={tree as any}
+            onPick={handlePick}
+            memoRef={memoRef}
+          />
+          <p className={styles.hint}>
+            選択中：{category ? findLabelByKey(category, tree) : "—"}{" "}
+            {sub ? `> ${findLabelByKey(sub, tree)}` : ""}
+          </p>
+        </section>
+
+        {/* 詳細メモ（任意） */}
+        <section className={`${styles.panel} & ${styles.note}`}>
+          <label className={`${styles.label} & ${styles.noteTitle}`} htmlFor="memo-input">
+            備考（任意）
+          </label>
+          <textarea
+            id="memo-input"
+            rows={3}
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+            className={styles.textarea}
+            placeholder="自由入力"
+            ref={memoRef}
+          />
+        </section>
+
+        {/* アクション */}
+        <section className={`${styles.actionRow} & ${styles.save}`}>
           <button
             type="button"
-            className={styles.secondaryBtn}
-            onClick={handleSetToday}
+            className={styles.primaryBtn}
+            onClick={handleSubmit}
+            disabled={!canSubmit || saving}
           >
-            今
+            {saving ? "保存中…" : "記録"}
           </button>
-        </div>
-      </section>
-
-      {/* カテゴリ → 横スワイプでサブ選択 */}
-      <section className={styles.panel}>
-        <CategorySwiper
-          parents={tree as any}
-          onPick={handlePick}
-          memoRef={memoRef}
-        />
-        <p className={styles.hint}>
-          選択中：{category ? findLabelByKey(category, tree) : "—"}{" "}
-          {sub ? `> ${findLabelByKey(sub, tree)}` : ""}
-        </p>
-      </section>
-
-      {/* 詳細メモ（任意） */}
-      <section className={styles.panel}>
-        <label className={styles.label} htmlFor="memo-input">
-          詳細（任意）
-        </label>
-        <textarea
-          id="memo-input"
-          rows={3}
-          value={memo}
-          onChange={(e) => setMemo(e.target.value)}
-          className={styles.textarea}
-          placeholder="自由入力"
-          ref={memoRef}
-        />
-      </section>
-
-      {/* アクション */}
-      <section className={styles.actionRow}>
-        <button
-          type="button"
-          className={styles.primaryBtn}
-          onClick={handleSubmit}
-          disabled={!canSubmit || saving}
-        >
-          {saving ? "保存中…" : "記録"}
-        </button>
-        {msg && <span className={styles.msg}>{msg}</span>}
-      </section>
+          {msg && <span className={styles.msg}>{msg}</span>}
+        </section>
+      </div>
       <Footer />
     </div>
   );
