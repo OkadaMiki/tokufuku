@@ -7,6 +7,7 @@ import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { auth } from "@/lib/firebase";
 import { clearAllLocalData } from "@/lib/level/storage";
+import Link from "next/link";
 
 export default function UserPage() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function UserPage() {
     <>
       <p>ユーザー名：{user?.username}</p>
       <PrimaryButton text="ログアウト" onClick={handleLogout} color="red" />
+      <Link href="/develop">リセットページ</Link>
       <FooterNav />
     </>
   );
