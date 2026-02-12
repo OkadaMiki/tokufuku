@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 import CategorySwiper from "@/components/features/record/CategorySwiper";
@@ -76,14 +75,14 @@ export default function RecordPage() {
           ]}
           value={type}
           onChange={(val) => setType(val as TypeKind)}
-          className={`${styles.fullWidthTab} & ${styles.selectTab} `}
+          className={`${styles.fullWidthTab} ${styles.selectTab} `}
         />
       </header>
 
       <div className={styles.main}>
         {/* 日付 */}
-        <section className={`${styles.panel} & ${styles.row} & ${styles.date}`}>
-          <label className={`${styles.label} & ${styles.dateTitle}`} htmlFor="date-input">
+        <section className={`${styles.panel} ${styles.row} ${styles.date}`}>
+          <label className={`${styles.label} ${styles.dateTitle}`} htmlFor="date-input">
             日付
           </label>
           <input
@@ -96,7 +95,7 @@ export default function RecordPage() {
         </section>
 
         {/* カテゴリ → 横スワイプでサブ選択 */}
-        <section className={`${styles.panel} & ${styles.category}`}>
+        <section className={`${styles.panel} ${styles.category}`}>
           <CategorySwiper
             parents={tree as any}
             onPick={handlePick}
@@ -109,8 +108,8 @@ export default function RecordPage() {
         </section>
 
         {/* 詳細メモ（任意） */}
-        <section className={`${styles.panel} & ${styles.note}`}>
-          <label className={`${styles.label} & ${styles.noteTitle}`} htmlFor="memo-input">
+        <section className={`${styles.panel} ${styles.note}`}>
+          <label className={`${styles.label} ${styles.noteTitle}`} htmlFor="memo-input">
             備考（任意）
           </label>
           <textarea
@@ -125,7 +124,7 @@ export default function RecordPage() {
         </section>
 
         {/* アクション */}
-        <section className={`${styles.actionRow} & ${styles.save}`}>
+        <section className={`${styles.actionRow} ${styles.save}`}>
           <button
             type="button"
             className={styles.primaryBtn}
