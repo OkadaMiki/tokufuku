@@ -39,8 +39,8 @@ export const DebugResetButton = ({
         console.error("Local storage clear failed", e);
       }
       
-      alert("リセットしました。画面を再読み込みします。");
-      window.location.reload();
+      alert("リセットしました。ホームに戻ります。");
+      window.location.href = "/home";
     } else {
       alert("リセットに失敗しました。");
     }
