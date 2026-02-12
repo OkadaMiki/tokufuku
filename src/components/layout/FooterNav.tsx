@@ -10,7 +10,7 @@ type Props = {
 
 const items = [
   { href: "/list", label: "ログ", icon: "/assets/footer/log.svg" },
-  { href: "/record", label: "記録", icon: "/assets/footer/record.svg" },
+  { href: "/record", label: "記録する", icon: "/assets/footer/record.svg" },
   { href: "/home", label: "ホーム", icon: "/assets/footer/home.svg" },
   { href: "/care", label: "着せ替え", icon: "/assets/footer/dressup.svg" },
   { href: "/user", label: "メニュー", icon: "/assets/footer/menu.svg" },
